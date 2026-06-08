@@ -41,7 +41,7 @@ The TGS5042 is a fuel cell type sensor. It contains an aqueous alkaline electrol
 ## PIC16F688 Microcontroller Chip
 
 <p align="center">
-  <img src="resources/20260530_115704.jpg" width="225" alt="TGS-5042 Sensor">
+  <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
 
 Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. 
