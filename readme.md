@@ -14,7 +14,7 @@ Note: The date 2009 SEP 7. This device was indicating the five-chirp per minute 
 The hardware has several interesting, some unusual, and some familiar parts.  I did not kow what to expect, i was tinking it would be a simple sensor tied to a beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% so take it with about a pound of salt.
 - **TGS-5042** CO Sensor
 - **PIC16F88** Microcontroller
-- **MCP6021** Rail-to-Rail Input/Output, 10 MHz Op Amps
+- **MCP6042** rail-to rail high performance op amp uss a single supply drawing less than 1 µA
 - **RE46C107** DC to DC Converter, Voltage Regulator and Piezoelectric Horn Driver
 - Details and Test Software 
    - **Schematics!** PCB reverse engineering 
@@ -44,7 +44,7 @@ The TGS5042 is a fuel cell type sensor. It contains an aqueous alkaline electrol
   <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
 
-Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. 
+Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. What does the "D" stamped on TP1 mean? Possibly "Data" ?!?
 
 The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V. 
 
