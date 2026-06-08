@@ -37,3 +37,13 @@ The TGS5042 is a fuel cell type sensor. It contains an aqueous alkaline electrol
 
 ### Note the number/barcode:1642.
 -Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description.  
+
+## PIC16F688 Microcontroller Chip
+
+<p align="center">
+  <img src="resources/20260530_115704.jpg" width="225" alt="TGS-5042 Sensor">
+</p>
+
+Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. 
+
+The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V. 
