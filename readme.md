@@ -8,7 +8,8 @@ This device is a sensor and alarm device (ca. 2009) which has reached its end-of
 <p align="center">
   <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
 </p>
-Note the date 9 SEP 2009. This device was indicating the 4-chirp warning: End-of-life. 
+Note the date 2009 SEP 7. This device was indicating the 4-chirp warning: End-of-life. 
+
 ## Hardware Description
 The hardware has several interesting, some unusual, and some familiar parts.  I did not kow what to expect, i was tinking it would be a simple sensor tied to a beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% so take it with about a pound of salt.
 - **TGS-5042** CO Sensor
@@ -34,5 +35,5 @@ When I first saw this device I thought it was a battery. There was even about 0.
 
 The TGS5042 is a fuel cell type sensor. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
 
-### Note the number/barcode: 
-1642. Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current. I will discuss reading this sensor in the OP Amp interface circuit description.  
+### Note the number/barcode:1642.
+-Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description.  
