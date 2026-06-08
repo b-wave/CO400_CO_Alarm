@@ -4,11 +4,11 @@
 </p>
 
 ## Overview
-This device is a sensor and alarm device (ca. 2009) which has reached its end-of-life. I was curious what made it tick and was surprised to find an automated detection and  warning system that is a masterwork of low-power engineering design. It is not only just a humble consumer device but is a minuature automated chemistry lab, with a fuel cell!  
+This device is a sensor and alarm device (ca. 2009) which has reached its end-of-life. I was curious what made it tick and was surprised to find an automated detection and  warning system that is a masterwork of low-power engineering design. It is not only just a humble consumer device but is a minuature automated chemistry lab, with a fuel cell!  It was manufatured by a company called **BRK Brands, Inc.**  So it is likely used in other CO detectors as well. 
 <p align="center">
   <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
 </p>
-Note the date 2009 SEP 7. This device was indicating the 4-chirp warning: End-of-life. 
+Note: The date 2009 SEP 7. This device was indicating the five-chirp per minute warning: End-of-life. 
 
 ## Hardware Description
 The hardware has several interesting, some unusual, and some familiar parts.  I did not kow what to expect, i was tinking it would be a simple sensor tied to a beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% so take it with about a pound of salt.
@@ -22,7 +22,7 @@ The hardware has several interesting, some unusual, and some familiar parts.  I 
    - **Software** For further investigations
  
 <p align="center">
-  <img src="resources/schematic.jpg" width="250" alt="CO400 Schematic">
+  <img src="resources/20260531_104048.jpg" width="250" alt="CO400 PCB">
 </p>
 
 ## Figaro TGS5042 Sensor 
@@ -48,18 +48,23 @@ Seeing this chip on the board is like being handed a secret decoder to the whole
 
 The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V. 
 
-## MCP6021 Op Amp
+## MCP6042 Op Amp
 <p align="center">
   <img src="resources/WIN_20260530_15_49_09_Pro.jpg" width="225" alt="Transimpedance Amplifier">
 </p>
 Score!  When a chip company gets selected to go in a product they get a "socket"  Microchip got two on this board! 
-The MCP6021, from Microchip Technology Inc. is a  rail-to rail input and output high performance operational amplifier. I think the configuration is called a Transimpedance Amplifier. 
+The MCP6042, from Microchip Technology Inc. is a  rail-to rail input and output high performance operational amplifier. The MCP6042 operates with
+a single supply voltage as low as 1.4V, while drawing less than 1 µA (maximum) of quiescent current per amplifier. These devices are also designed to support
+rail-to-rail input and output operation. This combination of features supports our  battery-powered application.
+The MCP6042 amplifier has a gain-bandwidth product of 14 kHz (typical) and are unity gain stable. These specifications make this e op amp ideal 
+for low frequency applications, such as sensor conditioning.
 
 ### Key specifications include: 
-  - wide band width (10 MHz)
-  - low noise (8.7 nV/?Hz) - sounds quiet to me, i am not sure what the ?Hz is. 
-  - low input offset voltage
-  - low distortion (0.00053% THD+N).
+   - Dual Amplifier in an 8-pin DIP Package
+   - Low Quiescent Current: 600 nA/amplifier (typical)
+   - Rail-to-Rail Input/Output
+   - Gain Bandwidth Product: 14 kHz (typical)
+   - Wide Supply Voltage Range: 1.4V to 6.0V
     
 **Note:**  The 1M Resistor and 100nF capacitor, these matches the reference circuit from the TGS-5042 Sensor documentaion. 
 
@@ -74,7 +79,8 @@ The RE46C107 is manufactured R&E International *A Subsidiary of Microchip Techno
 <p align="center">
   <img src="resources/WIN_20260530_15_49_50_Pro.jpg" width="225" alt="RE46C07 DC-DC converter Inductor">
 </p>
-This a micoscope picture of the inductor and diode, i was trying to get any indication of the values of teh Inductor and Diode - i assume that it matches the documtation's typical application circuit of 10 uH and a Schottky diode I chose a 1N5818 seems to fit the specs.  
+This a micoscope picture of the inductor, i was trying to get any indication of the values of the inductor and Diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor and a Schottky diode (I chose a 1N5818 seems to fit the specs.)  
+
     Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
     - Schottky diode D1 must have maximum peak current rating of at least 1.5A and for best results should have forward voltage spec of less 
@@ -92,6 +98,10 @@ This a micoscope picture of the inductor and diode, i was trying to get any indi
 ## Methods to My Madness:  
 How I captured the schematic
 *Comming Soon!*
+
+<p align="center">
+  <img src="resources/schematic.jpg" width="250" alt="CO400 Schematic">
+</p>
 
 ## Circuit Analysis:  
 How the circuits work
