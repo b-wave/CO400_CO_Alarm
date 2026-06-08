@@ -8,16 +8,17 @@ This device is a sensor and alarm device (ca. 2009) which has reached its end-of
 <p align="center">
   <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
 </p>
-
+Note the date 9 SEP 2009. This device was indicating the 4-chirp warning: End-of-life. 
 ## Hardware Description
 The hardware has several interesting, some unusual, and some familiar parts.  I did not kow what to expect, i was tinking it would be a simple sensor tied to a beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% so take it with about a pound of salt.
 - **TGS-5042** CO Sensor
-- **Microchip PIC16F88**Microcontroller
+- **PIC16F88** Microcontroller
 - **MCP6021** Rail-to-Rail Input/Output, 10 MHz Op Amps
 - **RE46C107** DC to DC Converter, Voltage Regulator and Piezoelectric Horn Drivel
 - Details and Test Software 
-   - **Schematics!** 
-   - **Software!** For further investigations
+   - **Schematics!** PCB reverse engineering 
+   - **Serial Data** Maybe, kind of?
+   - **Software** For further investigations
  
 <p align="center">
   <img src="resources/schematic.jpg" width="225" alt="CO400 Schematic">
