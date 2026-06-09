@@ -1,4 +1,4 @@
-# First Alert CO Alarm (Model CO400) - Teardown (Work in Progress) 
+8# First Alert CO Alarm (Model CO400) - Teardown (Work in Progress) 
 <p align="center">
   <img src="resources/20260530_110405.jpg" width="225" alt="First Alert CO Alarm">
 </p>
@@ -20,9 +20,8 @@ The hardware has several interesting, some unusual, and some familiar parts.  I 
    - **Schematics!** PCB reverse engineering 
    - **Serial Data** Maybe, kind of?
    - **Software** For further investigations
- 
 <p align="center">
-  <img src="resources/20260531_104048.jpg" width="250" alt="CO400 PCB">
+  <img src="resources/20260609_133546.jpg" width="250" alt="CO400 PCB">
 </p>
 
 ## Figaro TGS5042 Sensor 
