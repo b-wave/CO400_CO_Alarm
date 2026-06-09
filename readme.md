@@ -61,7 +61,7 @@ for low frequency applications, such as sensor conditioning.
 
 ### Key specifications include: 
    - Dual Amplifier in an 8-pin DIP Package
-   - Low Quiescent Current: 600 nA/amplifier (typical)
+   - Low Quiescent Current: <1 µA (600 nA/amplifiertypical)
    - Rail-to-Rail Input/Output
    - Gain Bandwidth Product: 14 kHz (typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
@@ -75,11 +75,11 @@ I had to remove the  piezoelectric transducer but that 16-pin DIP on th left sid
   <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
 </p>
  
-The RE46C107 is manufactured R&E International *A Subsidiary of Microchip Technology Inc.*  Is this a third and last "socket" win? Yes I think it is a third win! This is an interesting chip I never heard of. The RE46C107 is intended for use in 3V battery powered products like Smoke Detectors and CO Alarms. The circuit features a DC-to-DC up-converter and driver circuit suitable for driving a piezoelectric horn. Oh, so that's how they get such a loud siren out of 3V batteries and there is a spec for alarm devices have to be so many dB (loud).  A selectable  3.0V or 3.3V regulator is also provided for microprocessor voltage regulation, this curcuit uses the 3-Volt setting. It also has its own LED driver and low battery detection but for some reason these features were not used in this product. This chip is located under the Piezo Horn, so i removed it to get a look at these circuits. 
+The **RE46C107** is manufactured R&E International *A Subsidiary of Microchip Technology Inc.*  Is this a third and last "socket" win? Yes I think it is a third win! This is an interesting chip I never heard of. The RE46C107 is intended for use in 3V battery powered products like Smoke Detectors and CO Alarms. The circuit features a DC-to-DC up-converter and driver circuit suitable for driving a piezoelectric horn. Oh, so that's how they get such a loud siren out of 3V batteries and there is a spec for alarm devices have to be so many dB (loud).  A selectable  3.0V or 3.3V regulator is also provided for microprocessor voltage regulation, this curcuit uses the 3-Volt setting. It also has its own LED driver and low battery detection but for some reason these features were not used in this product. This chip is located under the Piezo Horn, so i removed it to get a look at these circuits. 
 <p align="center">
   <img src="resources/WIN_20260530_15_49_50_Pro.jpg" width="225" alt="RE46C07 DC-DC converter Inductor">
 </p>
-This a micoscope picture of the inductor, i was trying to get any indication of the values of the inductor and Diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor and a Schottky diode (I chose a 1N5818 seems to fit the specs.)  
+This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor. There is one small signal diode i used a 1N914 are a couple of rectifier diodes, shich were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  so i just used the same for the other diode. 
 
     Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
@@ -92,11 +92,12 @@ This a micoscope picture of the inductor, i was trying to get any indication of 
   - Low Quiescent Current - Low power design feature
   - 10V Boost Converter regulator - That's a lot of volts from a couple of 1.5 V AA batteries
   - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well
-  - Voltage Regulation to 3.0V or 3.3V - It is set to 3-Volts (3v0) by a logic input used to set the Vreg output voltage level is tied to Vss (GND).
+  - Voltage Regulation buck to 3.0V or 3.3V - It is set to 3-Volts (3v0) by a logic input used to set the Vreg output voltage level is tied to Vss (GND).
+  - Voltage Regulation for +5 Volts - For logic circuits
   - Low Battery Detection - not used in this circuit
 
 ## Methods to My Madness:  
-How I captured the schematic. Having the datasheets and reference circuits helped. The following two pictures were made to help. The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. 
+How I captured the schematic. Having the datasheets and reference circuits helped. The following two pictures were made to help. 
 
 <p align="center">
   <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
@@ -105,15 +106,33 @@ Note: the solder side is mirrored and enhanced like X-ray vision:
 <p align="center">
   <img src="resources/20260531_104048.jpg" width="225" alt="CO400 PCB">
 </p>
-I had no editing Software on hand  that could do layers like this. So I proceed to draw in the component outlines and using a continuity checker and a high contrast enhanced B&W print out, which was scaled up a bit I "Buzzed it out" and began capture in KiCad. since I started doing this before o  the board, I got the pin numbers wrong but that was easy to find the errors using the reference documents. As I stated earlier, this is probably not 100% correct,  I mainly considered the PIC16F688 controller as my initial plan was to unsolder the chip and replace it with a 14-pin socket. One other minor annoyance was there are a lot of pads that do not support any particular components. My guess is they are for factory programming, calibration, and test. Another clue is there are large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment fot a "bed of nails" fixture.
+
+### X-ray Vision.
+The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So I proceed to draw in the component outlines and using a continuity checker and a high contrast enhanced B&W print out, which was scaled up a bit which helped.
+
+### Buzzed it out
+I used my multimeter to do point-to-point and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. As I stated earlier, this is probably not 100% correct. 
+
+### Board Takeover!
+I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then ther emay still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. this would allow not only to reprogram the chip off of the board but the socket would alow me to jumper into an Arduino and run the sensor that way.
+
+### DFM 
+One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment fot a "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. 
+
+### Not My Problem
+This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still have some questions about power distribution etc. 
+
+### Here is the Schematic
+Here is what i came up with so far.  I  may upodate it if there are any otehre cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to copy or reproduce the detector. Hopefully it may be usefull to someone - maybe ass part of a post-apocalyptic tricorder device?  
 <p align="center">
-  <img src="resources/schematic.jpg" width="250" alt="CO400 Schematic">
+  <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
 </p>
 
 ## Circuit Analysis:  
 How the circuits work
 *Comming Soon!*
 
-## Testing Methods and Results  Including the *SERIAL DATA* I found :  
+## Testing Methods and Results: 
 
+Including the *Serial data?* I found :  
 *Comming Soon!*
