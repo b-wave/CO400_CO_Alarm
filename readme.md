@@ -148,6 +148,89 @@ Here is what i came up with so far.  I  may upodate it if there are any other co
 How the circuits work
 *Comming Soon!*
 
+## 1. Sensor Current to Output Voltage ($V_{out}$)
+The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.
+
+* Using a feedback resistor (R₁):
+$$V_{out} = I_s \times R_1$$ 
+* Using a load resistor (R₂):
+$$V_{out} = I_s \times R_2$$ 
+
+Where:
+
+* $I_s$ = Sensor output current (Amperes)
+* R = Resistor value (Ohms)
+
+------------------------------
+## 2. Calculating Sensor Current ($I_s$)
+To derive the raw sensor current in Amperes (A) from your circuit's measured output voltage, use the following formula:
+$$I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}$$ 
+------------------------------
+## 3. Carbon Monoxide (CO) Concentration Calculation
+To determine the absolute CO gas concentration in parts per million (ppm), divide the sensor output current by the sensor's individual sensitivity coefficient (measured in nA/ppm and found printed on the sensor's barcode).
+$$\text{CO Concentration (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}$$ 
+------------------------------
+## 4. EM5042A Evaluation Module Formula
+When utilizing the official Figaro EM5042A Evaluation Module, the circuit applies a fixed amplification factor (1.0 × 10⁶) resulting in a 1.0V baseline offset in clean air.
+$$V_{out} = (\text{Concentration} \times \text{Sensitivity}) + 1.0$$ 
+------------------------------
+## 5. Microprocessor Measurement Resolution
+To evaluate the minimum measurable step of carbon monoxide resolution for your specific analog-to-digital converter (ADC) setup, apply:
+$$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$ 
+
+  Where:
+  
+    * $C_{max}$ = Maximum target CO concentration
+    * M = Number of microcontroller ADC bits (e.g., 10-bit, 12-bit)
+    * $B_{min}$ = Minimum distinct digital bits required
+
+
+## Interface Circuitry & Theory of Operation
+The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics.
+------------------------------
+## 1. Anti-Polarization Shunt Circuit
+
+* Key Components: 600kΩ resistor (e.g., R_SHUNT) connected across the Working Electrode (WE) and Counter Electrode (CE).
+* Function: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
+
+------------------------------
+## 2. Stage 1: Transimpedance Amplifier (TIA)
+
+* Key Components: MCP6042 Op-Amp (First Stage: Pins 1, 2, 3), 1MΩ feedback resistor, 100nF feedback capacitor, 2.2kΩ / 220Ω isolation resistors.
+* Function: This stage converts the sensor's raw nanoampere (nA) current into a readable voltage.
+* Gain Control: The 1MΩ resistor sets the transimpedance gain. Because of this value, every 1 nA of sensor current translates to exactly 1 mV of voltage deviation at the output (Pin 1).
+   * Filtering: The 100nF parallel feedback capacitor acts as a low-pass filter to smooth out high-frequency environmental noise.
+   * Protection: The 2.2kΩ and 220Ω inline resistors protect the delicate op-amp inputs against unexpected current spikes.
+
+## Sensor Diagnostic Test (BIST Line 1)
+
+* Circuit Path: Microprocessor Digital Pin → Diode (Anode on MCU side) → 1MΩ resistor → Pin 3 (Inverting Input).
+* Normal Mode: The MCU configures its digital pin as a High-Z Input (or holds it HIGH). This reverse-biases the diode, isolating the diagnostic branch completely so it does not affect gas readings.
+* Self-Test Mode: The MCU drives this pin LOW. This pulls current away from Pin 3 through the 1MΩ resistor. The op-amp immediately compensates by driving its output (Pin 1) upward. The MCU checks for this predictable voltage step-up on the ADC to verify that the first stage op-amp loop is alive and electrically sound.
+
+------------------------------
+## 3. Inter-Stage RC Filter
+
+* Key Components: 240Ω series resistor, 100nF capacitor to Ground.
+* Function: Located between the first stage output (Pin 1) and second stage input (Pin 6). This passive low-pass filter acts as a hardware noise barrier. It strips away high-frequency ripple and digital switching noise before the signal enters the ADC buffer.
+
+------------------------------
+## 4. Stage 2: Voltage Buffer & Baseline Offset
+
+* Key Components: MCP6042 Op-Amp (Second Stage: Pins 5, 6, 7), Voltage Divider (590kΩ to $V_{CC}$ and 440kΩ to GND).
+* Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.
+* Voltage Divider (Pin 5): The 590kΩ and 440kΩ divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
+   * Why the Offset Matters: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
+
+## ADC / Buffer Validation Circuit (BIST Line 2)
+
+* Circuit Path: Microprocessor Pin (Analog or Digital) → 10kΩ resistor → Pin 6 (Non-inverting input of Buffer).
+* Dual Functionality:
+1. Buffer Diagnostics: If driven by a digital pin, the MCU can momentarily inject a test voltage into the buffer input. Observing the corresponding shift on the main ADC trace confirms that the second stage, the PCB trace, and the MCU's internal ADC hardware are completely intact.
+2. Fast Stabilization Assist: Upon cold-booting, electrochemical sensors require time to settle. The MCU can temporarily configure this pin as an active output to rapidly charge the filter node to its steady-state voltage, sharply reducing the initial sensor warm-up time before flipping the pin back to a passive input state.
+
+
+
 ## Testing Methods and Results: 
 
 Including the *Serial data?* I found :  
