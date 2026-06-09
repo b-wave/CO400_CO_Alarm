@@ -54,7 +54,7 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
 </p>
 Score!  When a chip company gets selected to go in a product they get a "socket"  Microchip got two on this board! 
 The MCP6042, from Microchip Technology Inc. is a  rail-to rail input and output high performance operational amplifier. The MCP6042 operates with
-a single supply voltage as low as 1.4V, while drawing less than 1 µA (maximum) of quiescent current per amplifier. These devices are also designed to support
+a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier. These devices are also designed to support
 rail-to-rail input and output operation. This combination of features supports our  battery-powered application.
 The MCP6042 amplifier has a gain-bandwidth product of 14 kHz (typical) and are unity gain stable. These specifications make this e op amp ideal 
 for low frequency applications, such as sensor conditioning.
@@ -66,7 +66,7 @@ for low frequency applications, such as sensor conditioning.
    - Gain Bandwidth Product: 14 kHz (typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
-**Note:**  The 1M Resistor and 100nF capacitor, these matches the reference circuit from the TGS-5042 Sensor documentaion. 
+**Note:**  The 1M Resistor and 100nF capacitor, these match the reference circuit from the TGS-5042 Sensor documentaion. 
 
 ## The RE46C107  DC to DC Converter, Voltage Regulator and Piezoelectric Horn Driver
 
@@ -90,15 +90,22 @@ This a micoscope picture of the inductor, i was trying to get any indication of 
 ### Key Specifications Include:
 
   - Low Quiescent Current - Low power design feature
-  - 10V Up Converter - That's a lot of volts from a couple of 1.5 V AA batteries
+  - 10V Boost Converter regulator - That's a lot of volts from a couple of 1.5 V AA batteries
   - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well
   - Voltage Regulation to 3.0V or 3.3V - It is set to 3-Volts (3v0) by a logic input used to set the Vreg output voltage level is tied to Vss (GND).
   - Low Battery Detection - not used in this circuit
 
 ## Methods to My Madness:  
-How I captured the schematic
-*Comming Soon!*
+How I captured the schematic. Having the datasheets and reference circuits helped. The following two pictures were made to help. The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. 
 
+<p align="center">
+  <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
+</p> 
+Note: the solder side is mirrored and enhanced like X-ray vision:
+<p align="center">
+  <img src="resources/20260531_104048.jpg" width="225" alt="CO400 PCB">
+</p>
+I had no editing Software on hand  that could do layers like this. So I proceed to draw in the component outlines and using a continuity checker and a high contrast enhanced B&W print out, which was scaled up a bit I "Buzzed it out" and began capture in KiCad. since I started doing this before o  the board, I got the pin numbers wrong but that was easy to find the errors using the reference documents. As I stated earlier, this is probably not 100% correct,  I mainly considered the PIC16F688 controller as my initial plan was to unsolder the chip and replace it with a 14-pin socket. One other minor annoyance was there are a lot of pads that do not support any particular components. My guess is they are for factory programming, calibration, and test. Another clue is there are large holes in the board. thers are not mounting holes but I suspect the are for alignment fot a "bed of nails" fixture. One final guess was  some of the component values. 
 <p align="center">
   <img src="resources/schematic.jpg" width="250" alt="CO400 Schematic">
 </p>
