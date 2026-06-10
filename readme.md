@@ -186,7 +186,7 @@ $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$
 
 ## Interface Circuitry & Theory of Operation
 
-The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics.
+The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics. This is a little technical - it was mostly vibed. 
 
 ### 1. Anti-Polarization Shunt Circuit
 
@@ -203,25 +203,25 @@ The TGS5042 carbon monoxide sensor generates a minute electrical current directl
 
 ### Sensor Diagnostic Test (BIST Line 1)
 
-* Circuit Path: Microprocessor Digital Pin → Diode (Anode on MCU side) → 1MΩ resistor → Pin 3 (Inverting Input).
+* Circuit Path: Microprocessor Digital Pin → Diode (D2) Anode on MCU side → 1MΩ (R5) resistor → Pin 3 (Inverting Input).
 * Normal Mode: The MCU configures its digital pin as a High-Z Input (or holds it HIGH). This reverse-biases the diode, isolating the diagnostic branch completely so it does not affect gas readings.
 * Self-Test Mode: The MCU drives this pin LOW. This pulls current away from Pin 3 through the 1MΩ resistor. The op-amp immediately compensates by driving its output (Pin 1) upward. The MCU checks for this predictable voltage step-up on the ADC to verify that the first stage op-amp loop is alive and electrically sound.
 
 ### 3. Inter-Stage RC Filter
 
-* Key Components: 240Ω series resistor, 100nF capacitor to Ground.
+* Key Components: 240Ω series resistor (R14), 100nF capacitor (C8) to Ground.
 * Function: Located between the first stage output (Pin 1) and second stage input (Pin 6). This passive low-pass filter acts as a hardware noise barrier. It strips away high-frequency ripple and digital switching noise before the signal enters the ADC buffer.
 
 ### 4. Stage 2: Voltage Buffer & Baseline Offset
 
-* Key Components: MCP6042 Op-Amp (Second Stage: Pins 5, 6, 7), Voltage Divider (590kΩ to $V_{CC}$ and 440kΩ to GND).
+* Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, 7, Voltage Divider 590kΩ (R17) to $V_{CC}$ and 440kΩ (R16) to GND.
 * Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.
-* Voltage Divider (Pin 5): The 590kΩ and 440kΩ divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
+* Voltage Divider (Pin 5): The 590kΩ (R17) and 440kΩ (R16)divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
    * Why the Offset Matters: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
 
 ### ADC / Buffer Validation Circuit (BIST Line 2)
 
-* Circuit Path: Microprocessor Pin (Analog or Digital) → 10kΩ resistor → Pin 6 (Non-inverting input of Buffer).
+* Circuit Path: Microprocessor Pin (Analog or Digital) → 10kΩ resistor (R1) → Pin 6 (Non-inverting input of Buffer).
 * Dual Functionality:
 1. Buffer Diagnostics: If driven by a digital pin, the MCU can momentarily inject a test voltage into the buffer input. Observing the corresponding shift on the main ADC trace confirms that the second stage, the PCB trace, and the MCU's internal ADC hardware are completely intact.
 2. Fast Stabilization Assist: Upon cold-booting, electrochemical sensors require time to settle. The MCU can temporarily configure this pin as an active output to rapidly charge the filter node to its steady-state voltage, sharply reducing the initial sensor warm-up time before flipping the pin back to a passive input state.
