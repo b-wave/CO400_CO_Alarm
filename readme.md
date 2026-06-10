@@ -52,7 +52,12 @@ Each sensor has a printed calibration number (see photo) This stands for 1.642nA
 Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. What does the "D" stamped on TP1 mean? 
 
 ### Features 
-The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V. 
+The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  Some of the key features/interfaces:
+  - It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V.
+  - This chip also supports low-power by switching off things like the Thermistor temperature sensor and the amplifiers to save power.
+  - Since it is a saftey device it also provides a power-cycle with an NPN transistor switch (Q1) a PN2222 temporatily taking the battery voltage down trough (R6) controlled by a port (AN3) - proabibily on a watchdog timer?
+  - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests and simultainioisly LED (D4) /Thermistor (TH1)  by pulling (RC0) Low.
+  -   SW1 is the TEST/SILENCE button to input (RC5). 
 
 ## MCP6042 Op Amp
 <p align="center">
@@ -60,23 +65,22 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
 </p>
 
 ### Score!  
-When a chip company gets selected to go in a product they get a "socket"  Microchip got two on this board! 
-The MCP6042, from Microchip Technology Inc. is a  rail-to rail input and output high performance operational amplifier. The MCP6042 operates with
-a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier. These devices are also designed to support
-rail-to-rail input and output operation. This combination of features supports our  battery-powered application.
+When a chip company gets selected to go in a product they get a "socket" Microchip got two on this board! 
+The MCP6042, from Microchip Technology Inc. is a  high performance operational amplifier. The MCP6042 operates with
+a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier.
 The MCP6042 amplifier operates in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal 
-for low frequency applications, such as sensor conditioning.
+for low frequency applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
    - Dual Amplifier in an 8-pin DIP Package
-   - Low Quiescent Current: <1 µA (600 nA/amplifiertypical)
+   - Low Quiescent Current: <1 µA (600 nA/amplifier typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
-**Note:**  The 1M Resistor and 100nF capacitor, these match the reference circuit from the TGS-5042 Sensor documentaion. 
+**Note:**  The 1M Resistor and 100nF capacitor seenin th photo match the reference circuit from the TGS-5042 Sensor documentaion. 
 
-## The RE46C107  DC to DC Converter, Voltage Regulator and Piezoelectric Horn Driver
+## The RE46C107  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
-I had to remove the  piezoelectric transducer but that 16-pin DIP on th left side of the board is the  RE46C107
+I had to remove the  piezoelectric transducer but that 16-pin DIP on th left side of the board is the RE46C107
 <p align="center">
   <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
 </p>
@@ -93,7 +97,7 @@ It also has a LED Driver and low battery detection but for some reason these fea
 </p>
 
 ### Scope Out the Supporting Parts
-This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor. There is one small signal diode i used a 1N914 are a couple of rectifier diodes, shich were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  so i just used the same for the other diode. 
+This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor. There is one small signal diode i used a 1N914/1N4148.  Ther4en there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  so i just used the same for the other diode. 
 
     Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
@@ -145,7 +149,7 @@ Here is what i came up with so far.  I  may upodate it if there are any other co
 *Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.*
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. Ther are a couple of *"gotyas"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. 
+Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. Ther are a couple of *"gotyas"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is baswically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are teh details:
 *Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
@@ -169,19 +173,19 @@ $$I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}$$
 To determine the absolute CO gas concentration in parts per million (ppm), divide the sensor output current by the sensor's individual sensitivity coefficient (measured in nA/ppm and found printed on the sensor's barcode).
 $$\text{CO Concentration (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}$$ 
 
-### 4. EM5042A Evaluation Module Formula
-When utilizing the official Figaro EM5042A Evaluation Module, the circuit applies a fixed amplification factor (1.0 × 10⁶) resulting in a 1.0V baseline offset in clean air.
+### 4. Figaro Reference Formula
+The official Figaro EM5042A Evaluation Module circuit applies a fixed amplification factor (1.0 × 10⁶) resulting in a 1.0V baseline offset in clean air.
 $$V_{out} = (\text{Concentration} \times \text{Sensitivity}) + 1.0$$ 
 
 ## 5. Microprocessor Measurement Resolution
-To evaluate the minimum measurable step of carbon monoxide resolution for your specific analog-to-digital converter (ADC) setup, apply:
+To evaluate the minimum measurable step of carbon monoxide resolution for our specific analog-to-digital converter (ADC) setup, apply:
 $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$ 
 
   Where:
   
-    * $C_{max}$ = Maximum target CO concentration
+    * Cmax = Maximum target CO concentration
     * M = Number of microcontroller ADC bits (e.g., 10-bit, 12-bit)
-    * $B_{min}$ = Minimum distinct digital bits required
+    * Bmin = Minimum distinct digital bits required
 
 
 ## Interface Circuitry & Theory of Operation
@@ -190,8 +194,11 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 ### 1. Anti-Polarization Shunt Circuit
 
+ A big deal for just one  resistor.  
+ *TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic*
+ 
 * The 600kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
-* Function: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
+* Note: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
 
 ### 2. Stage 1: Transimpedance Amplifier (TIA)
 
