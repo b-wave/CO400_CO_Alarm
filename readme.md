@@ -64,14 +64,12 @@ When a chip company gets selected to go in a product they get a "socket"  Microc
 The MCP6042, from Microchip Technology Inc. is a  rail-to rail input and output high performance operational amplifier. The MCP6042 operates with
 a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier. These devices are also designed to support
 rail-to-rail input and output operation. This combination of features supports our  battery-powered application.
-The MCP6042 amplifier has a gain-bandwidth product of 14 kHz (typical) and is unity gain stable. These specifications make this op amp ideal 
+The MCP6042 amplifier operates in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal 
 for low frequency applications, such as sensor conditioning.
 
 ### Key specifications include: 
    - Dual Amplifier in an 8-pin DIP Package
    - Low Quiescent Current: <1 µA (600 nA/amplifiertypical)
-   - Rail-to-Rail Input/Output
-   - Gain Bandwidth Product: 14 kHz (typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
 **Note:**  The 1M Resistor and 100nF capacitor, these match the reference circuit from the TGS-5042 Sensor documentaion. 
@@ -118,7 +116,7 @@ How I captured the schematic. Having the datasheets and reference circuits helpe
 <p align="center">
   <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
 </p> 
-Note: the solder side is mirrored and enhanced like X-ray vision:
+Note: the solder side is mirrored and enhanced - like viewing the board through the circuit side:
 <p align="center">
   <img src="resources/20260531_104048.jpg" width="225" alt="CO400 PCB">
 </p>
@@ -139,17 +137,19 @@ One other minor annoyance tracing the circuits was there are a lot of pads that 
 This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still have some questions about power distribution etc. 
 
 ### Here is the Schematic
-Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. Hopefully, it may be usefull to someone - maybe as part of a post-apocalyptic tricorder device?  
+Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. Hopefully, it may be usefull to someone - maybe as part of a post-apocalyptic tricorder device?   
 <p align="center">
   <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
 </p>
 
+*Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.*
+
 ## Circuit Analysis:  
-How the circuits work
-*Comming Soon!*
+Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. Ther are a couple of *"gotyas"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. 
+*Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
-The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.
+The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.  He is basically how this op amp works: 
 
 * Using a feedback resistor (R₁):
 $$V_{out} = I_s \times R_1$$ 
@@ -186,7 +186,7 @@ $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$
 
 ## Interface Circuitry & Theory of Operation
 
-The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics. This is a little technical - it was mostly vibed. 
+OK with that out of the way, lets dig into some of these circuits. The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with the integrated Built-In Self-Test (BIST) diagnostics.
 
 ### 1. Anti-Polarization Shunt Circuit
 
@@ -195,13 +195,13 @@ The TGS5042 carbon monoxide sensor generates a minute electrical current directl
 
 ### 2. Stage 1: Transimpedance Amplifier (TIA)
 
-* Key Components: (U3A) MCP6042 Op-Amp (First Stage: Pins 1, 2, 3), 1MΩ feedback resistor(R3), 100nF feedback capacitor (2.2kΩ (R4) / 220Ω (R11) act as isolation resistors.
+* Key Components:  MCP6042 Op-Amp (U3A) (First Stage: Pins 1, 2, 3), 1MΩ feedback resistor (R3), 100nF feedback capacitor (2.2kΩ (R4) / 220Ω (R11) ) act as isolation resistors.
 * Function: This stage converts the sensor's raw nanoampere (nA) current into a readable voltage.
-* Gain Control: The 1MΩ resistor sets the transimpedance gain. Because of this value, every 1 nA of sensor current translates to exactly 1 mV of voltage deviation at the output (Pin 1).
+* Gain Control: The 1MΩ resistor (R3) sets the transimpedance gain. Because of this value, every 1 nA of sensor current translates to exactly 1 mV of voltage deviation at the output (Pin 1) the following circuits are needed.
    * Filtering: The 100nF parallel feedback capacitor acts as a low-pass filter to smooth out high-frequency environmental noise.
    * Protection: The 2.2kΩ and 220Ω inline resistors protect the delicate op-amp inputs against unexpected current spikes.
 
-### Sensor Diagnostic Test (BIST Line 1)
+### Sensor Diagnostic Test 1 (RA5)
 
 * Circuit Path: Microprocessor Digital Pin → Diode (D2) Anode on MCU side → 1MΩ (R5) resistor → Pin 3 (Inverting Input).
 * Normal Mode: The MCU configures its digital pin as a High-Z Input (or holds it HIGH). This reverse-biases the diode, isolating the diagnostic branch completely so it does not affect gas readings.
@@ -215,18 +215,16 @@ The TGS5042 carbon monoxide sensor generates a minute electrical current directl
 ### 4. Stage 2: Voltage Buffer & Baseline Offset
 
 * Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, 7, Voltage Divider 590kΩ (R17) to $V_{CC}$ and 440kΩ (R16) to GND.
-* Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.
-* Voltage Divider (Pin 5): The 590kΩ (R17) and 440kΩ (R16)divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
+* Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
+* Voltage Divider (Pin 5): The 590kΩ (R17) and 440kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
    * Why the Offset Matters: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
 
-### ADC / Buffer Validation Circuit (BIST Line 2)
+### ADC / Buffer Validation Circuit 2 (RA1/AN1)
 
-* Circuit Path: Microprocessor Pin (Analog or Digital) → 10kΩ resistor (R1) → Pin 6 (Non-inverting input of Buffer).
+* Circuit Path: Microprocessor Pin (RA1/AN1) → 10kΩ resistor (R1) → Pin 6 (U3B) The non-inverting input of the Buffer stage.
 * Dual Functionality:
 1. Buffer Diagnostics: If driven by a digital pin, the MCU can momentarily inject a test voltage into the buffer input. Observing the corresponding shift on the main ADC trace confirms that the second stage, the PCB trace, and the MCU's internal ADC hardware are completely intact.
 2. Fast Stabilization Assist: Upon cold-booting, electrochemical sensors require time to settle. The MCU can temporarily configure this pin as an active output to rapidly charge the filter node to its steady-state voltage, sharply reducing the initial sensor warm-up time before flipping the pin back to a passive input state.
-
-
 
 ## Testing Methods and Results: 
 
