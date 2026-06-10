@@ -188,15 +188,15 @@ $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$
 ## Interface Circuitry & Theory of Operation
 
 ### The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics.
-------------------------------
+
 ### 1. Anti-Polarization Shunt Circuit
 
-* Key Components: 600kΩ resistor (e.g., R_SHUNT) connected across the Working Electrode (WE) and Counter Electrode (CE).
+* The 600kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
 * Function: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
 
 ### 2. Stage 1: Transimpedance Amplifier (TIA)
 
-* Key Components: MCP6042 Op-Amp (First Stage: Pins 1, 2, 3), 1MΩ feedback resistor, 100nF feedback capacitor, 2.2kΩ / 220Ω isolation resistors.
+* Key Components: (U3A) MCP6042 Op-Amp (First Stage: Pins 1, 2, 3), 1MΩ feedback resistor(R3), 100nF feedback capacitor (2.2kΩ (R4) / 220Ω (R11) act as isolation resistors.
 * Function: This stage converts the sensor's raw nanoampere (nA) current into a readable voltage.
 * Gain Control: The 1MΩ resistor sets the transimpedance gain. Because of this value, every 1 nA of sensor current translates to exactly 1 mV of voltage deviation at the output (Pin 1).
    * Filtering: The 100nF parallel feedback capacitor acts as a low-pass filter to smooth out high-frequency environmental noise.
