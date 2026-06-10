@@ -161,7 +161,6 @@ Where:
 * $I_s$ = Sensor output current (Amperes)
 * R = Resistor value (Ohms)
 
-------------------------------
 ### 2. Calculating Sensor Current ($I_s$)
 To derive the raw sensor current in Amperes (A) from your circuit's measured output voltage, use the following formula:
 $$I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}$$ 
@@ -187,7 +186,7 @@ $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$
 
 ## Interface Circuitry & Theory of Operation
 
-### The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics.
+The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with integrated Built-In Self-Test (BIST) diagnostics.
 
 ### 1. Anti-Polarization Shunt Circuit
 
@@ -213,7 +212,6 @@ $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$
 * Key Components: 240Ω series resistor, 100nF capacitor to Ground.
 * Function: Located between the first stage output (Pin 1) and second stage input (Pin 6). This passive low-pass filter acts as a hardware noise barrier. It strips away high-frequency ripple and digital switching noise before the signal enters the ADC buffer.
 
-------------------------------
 ### 4. Stage 2: Voltage Buffer & Baseline Offset
 
 * Key Components: MCP6042 Op-Amp (Second Stage: Pins 5, 6, 7), Voltage Divider (590kΩ to $V_{CC}$ and 440kΩ to GND).
