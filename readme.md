@@ -18,7 +18,7 @@ The hardware has several interesting, some unusual, and some familiar parts.  <p
 </p>
 
 ### One moment please.. 
-I did not kow what to expect, i was tinking it would be a simple sensor tied to a beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% so take it with about a pound of salt.
+I did not kow what to expect, i was thinking it would be a simple sensor tied to a piezo beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% correct so,  take it with about a pound of salt.
 
 ### The hardware 
 - **TGS-5042** CO Sensor
@@ -58,8 +58,8 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
   - This chip also supports low-power by switching off things like the Thermistor temperature sensor and the amplifiers to save power.
   - Since it is a saftey device it also provides a power-cycle with an NPN transistor switch (Q1) a PN2222 temporatily taking the battery voltage down trough (R6) controlled by a port (AN3) - proabibily on a watchdog timer?
   - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests
-  - The LED (D4) /Thermistor (TH1) are controlled simultaneously by pulling (RC0) Low.
-  -  SW1 is the TEST/SILENCE button to input (RC5).
+  - The LED (D4) & Thermistor (TH1) are controlled simultaneously by pulling (RC0) Low.
+  -  SW1 is the TEST/SILENCE button connected to input (RC5).
   -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. 
 
 ## MCP6042 Op Amp
