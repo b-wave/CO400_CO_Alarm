@@ -57,8 +57,10 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
   - It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V.
   - This chip also supports low-power by switching off things like the Thermistor temperature sensor and the amplifiers to save power.
   - Since it is a saftey device it also provides a power-cycle with an NPN transistor switch (Q1) a PN2222 temporatily taking the battery voltage down trough (R6) controlled by a port (AN3) - proabibily on a watchdog timer?
-  - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests and simultainioisly LED (D4) /Thermistor (TH1)  by pulling (RC0) Low.
-  -   SW1 is the TEST/SILENCE button to input (RC5). 
+  - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests
+  - The LED (D4) /Thermistor (TH1) are simultainioisly controlled  by pulling (RC0) Low.
+  -  SW1 is the TEST/SILENCE button to input (RC5).
+  -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. 
 
 ## MCP6042 Op Amp
 <p align="center">
@@ -78,7 +80,7 @@ for low frequency applications, such as sensor conditioning. We will go into the
    - Low Quiescent Current: <1 µA (600 nA/amplifier typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
-**Note:**  The 1M Resistor and 100nF capacitor seenin th photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
+**Note:**  The 1M Resistor and 100nF capacitor seen in th photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
 
 ## The RE46C107  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
@@ -99,7 +101,7 @@ It also has a LED Driver and low battery detection but for some reason these fea
 </p>
 
 ### Scope Out the Supporting Parts
-This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor. There is one small signal diode i used a 1N914/1N4148.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  so i just used the same for the other diode. 
+This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  There ia another rectifier diode in the processor test circuits - not related to this chip- so i just used the same for that other diode. 
 
     Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
@@ -128,7 +130,7 @@ Note: the solder side is mirrored and enhanced - like viewing the board through 
 </p>
 
 ### X-ray Vision.
-The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So I proceed to draw in the component outlines and using a continuity checker and a high contrast enhanced B&W print out, which was scaled up a bit which helped.
+The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So no X-ray vision needed,  I proceed to draw in the component outlines and using continuity check on my DMM and a high contrast enhanced B&W print out, which was scaled up a bit which helped.
 
 ### Buzzed it out
 I used my multimeter to do point-to-point and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents.
@@ -154,7 +156,7 @@ Hopefully, it may be usefull to someone - maybe as part of your post-apocalyptic
 ~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE**
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. Ther are a couple of *"gotyas"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
+Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
 *Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
@@ -199,8 +201,8 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 ### 1. Anti-Polarization Shunt Circuit
 
- A big deal for just one  resistor.  **DONE!**
- ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~
+ A big deal for just one  resistor. It was verified by reading the color code as a 100K resistor.  
+ ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~ **DONE!**
  
 * The 600kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
 * Note: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
@@ -215,7 +217,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 ### Sensor Diagnostic Test 1 (RA5)
 
-* Circuit Path: Microprocessor Digital Pin → Diode (D2) Anode on MCU side → 1MΩ (R5) resistor → Pin 3 (Inverting Input).
+* Circuit Path: Microprocessor Digital Pin → Diode (D2) Anode on MCU side → 1MΩ (R5) resistor → Pin 3 (Inverting Input). There small signal diode (D2) is probabily a 1N914 or 1N4148.
 * Normal Mode: The MCU configures its digital pin as a High-Z Input (or holds it HIGH). This reverse-biases the diode, isolating the diagnostic branch completely so it does not affect gas readings.
 * Self-Test Mode: The MCU drives this pin LOW. This pulls current away from Pin 3 through the 1MΩ resistor. The op-amp immediately compensates by driving its output (Pin 1) upward. The MCU checks for this predictable voltage step-up on the ADC to verify that the first stage op-amp loop is alive and electrically sound.
 
@@ -240,7 +242,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
    
   NOTE:  Based on the transient response of the 10kΩ injection resistor and the 100nF filter capacitor, a single initialization pulse lasting exactly 560 microseconds (0.56 ms) will perfectly pre-charge the analog filter node to its steady-state clean-air operating baseline, eliminating the slow hardware startup lag.  
 
-## Testing Methods and Results: 
+## Testing Methods, Notes & Results 
 
 Including the *Serial data?* I found :  
 *Comming Soon!*
@@ -253,7 +255,7 @@ The interface board utilizes a Microchip RE46C107 ASIC to manage power distribut
 * **Stage 2 Baseline Bias (Pin 5):** Biased to a factory baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
 
 ### Corrected Schematic Values (3.3V System Target)
-To manually replicate the verified in-situ baseline voltage of ~0.298V without utilizing non-standard values, substitute the theoretical divider values with standard 1% components:
+To manually replicate the verified *in-situ* baseline voltage of ~0.298V without utilizing non-standard values, substitute the theoretical divider values with standard 1% components:
 
 * **Top Divider Resistor (R_top):** Swap out for a standard **487kΩ** (or **470kΩ** as a close alternative).
 * **Bottom Divider Resistor (R_bottom):** Swap out for a standard **47kΩ**.
