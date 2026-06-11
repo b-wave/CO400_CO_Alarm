@@ -60,7 +60,8 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
   - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests
   - The LED (D4) & Thermistor (TH1) are controlled simultaneously by pulling (RC0) Low.
   -  SW1 is the TEST/SILENCE button connected to input (RC5).
-  -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. 
+  -  Vbatt here is connected to (AN5) for battery voltage measurement.
+  -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. TODO Retrace this circuit to try to find out what it does. 
 
 ## MCP6042 Op Amp
 <p align="center">
@@ -68,8 +69,8 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
 </p>
 
 ### Score!  
-When a chip company gets selected to go in a product they get a "socket" **Microchip** got two on this board! 
-The **MCP6042**, from **Microchip Technology Inc.** is a  high performance operational amplifier. The **MCP6042** amplifier acts in this device as a Transimpedance Amplifier (TIA). All the current from the sensor is forced to flow through the feedback resistor The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications make this op amp ideal impedance characteristics and bandwidth 
+When a chip company gets selected to go in a product they get a "socket" **Microchip** got two on this board the **PIC16F688** and  
+The **MCP6042** are both from **Microchip Technology Inc.**  The **MCP6042** is a  high performance operational amplifier used in this device as a Transimpedance Amplifier (TIA) for current to voltage conversion. In this configuration the current from the sensor is forced to flow through the feedback resistor. The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications for this op amp -like impedance characteristics and gain bandwidth- are ideal 
 for applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
@@ -77,7 +78,7 @@ for applications, such as sensor conditioning. We will go into the details later
    - Low Quiescent Current: <1 µA (600 nA/amplifier typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
-**Note:**  The 1M Resistor and 100nF capacitor seen in th photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
+**Note:**  The 1M Resistor and 100nF capacitor seen in the photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
 
 ## The RE46C107  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
@@ -98,7 +99,7 @@ It also has a LED Driver and low battery detection but for some reason these fea
 </p>
 
 ### Scope Out the Supporting Parts
-This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  There ia another rectifier diode in the processor test circuits - not related to this chip- so i just used the same for that other diode. 
+This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  There is another rectifier diode in the processor test circuits - not related to this chip- so i just used the same for that other diode. 
 
     Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
@@ -127,7 +128,7 @@ Note: the solder side is mirrored and enhanced - like viewing the board through 
 </p>
 
 ### X-ray Vision.
-The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So no X-ray vision needed. I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - but an X-ray view would have been better. 
+The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces throughthe component side. I had no editing software on hand that could do layers like this. So no X-ray vision needed. I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - but an X-ray view would have been better. 
 
 ### Buzzed it out
 I used my multimeter to do point-to-point continuity tests and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. Assignment of component values was done later, with the help of component markings and measurements.  
