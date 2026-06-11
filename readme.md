@@ -113,8 +113,8 @@ This a microscope picture of the inductor, i was trying to get any indication of
 
   - Low Quiescent Current - Low power design feature
   - 10V Boost Converter regulator - That's a lot of volts from a couple of 1.5 V AA batteries
-  - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well
-  - Voltage Regulation buck to 3.0V or 3.3V - It is set to 3-Volts (3v0) by a logic input used to set the Vreg output voltage level is tied to Vss (GND).
+  - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well.
+  - Voltage Regulation buck to 3.0V or 3.3V - It is set by a logic input used to set the Vreg output.
   - Voltage Regulation for +5 Volts - For logic circuits
   - Low Battery Detection - not used in this circuit
   - LED Driver- not used in this circuit 
@@ -130,19 +130,19 @@ Note: the solder side is mirrored and enhanced - like viewing the board through 
 </p>
 
 ### X-ray Vision.
-The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So no X-ray vision needed,  I proceed to draw in the component outlines and using continuity check on my DMM and a high contrast enhanced B&W print out, which was scaled up a bit which helped.
+The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So no X-ray vision needed,  I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - but an X-ray view would have been better. 
 
 ### Buzzed it out
-I used my multimeter to do point-to-point and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents.
+I used my multimeter to do point-to-point and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. Assignment of component values was done later, with the help of component markings and measurements.  
 
 ### Board Takeover!
-I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. this would allow not only to reprogram the chip off of the board but the socket would alow me to jumper into an Arduino and run the sensor that way.
+I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. This would allow not only to reprogram the chip off of the board but the socket also would alow me to jumper into an Arduino and run the sensor that way. Alternatively, simply soldering in short jumper wires to the pads after removing the chip would allow me to use a breadboard. 
 
 ### DFM & DFT
-One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment fot a "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. 
+One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled. 
 
 ### Not My Problem
-This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still have some questions about power distribution etc. 
+This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still had some questions about power distribution etc. 
 
 ### Here is the Schematic
 Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. 
