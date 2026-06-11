@@ -235,15 +235,12 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 Including the *Serial data?* I found :  
 *Comming Soon!*
 
-### Core Power Architecture & Baseline Verifications
-The interface board utilizes a Microchip RE46C107 ASIC to manage power distribution, battery step-up operations, and reference voltage rails. 
-
 ### Notes and Comments 
-* **Main System Reference (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
-* **Piezo/Amplifier Rail (`VO`):** Boosted internally to **4.5V** via the chip's inductive DC-to-DC step-up circuit.
-* **Stage 2 Baseline Bias (Pin 5):** Biased to a factory baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
-
-### Corrected Schematic Values (3.3V System Target)
+* **Note: Main System Reference (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
+* **Note: Piezo/Amplifier Rail (`VO`):** Boosted internally to **4.5V** via the chip's inductive DC-to-DC step-up circuit.
+* **Note: Stage 2 Baseline Bias (Pin 5):** Biased to a factory baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
+* 
+## Corrected Schematic Values (3.3V System Target)
 To manually replicate the verified *in-situ* baseline voltage of ~0.298V without utilizing non-standard values, substitute the theoretical divider values with standard 1% components:
 
 * **Top Divider Resistor (R_top):** Swap out for a standard **487kΩ** (or **470kΩ** as a close alternative).
