@@ -143,15 +143,18 @@ One other minor annoyance tracing the circuits was there are a lot of pads that 
 This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still have some questions about power distribution etc. 
 
 ### Here is the Schematic
-Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. Hopefully, it may be usefull to someone - maybe as part of a post-apocalyptic tricorder device?   
+Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. 
+
+Hopefully, it may be usefull to someone - maybe as part of your post-apocalyptic tricorder device project?   
+
 <p align="center">
   <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
 </p>
 
-*Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.*
+~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE**
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. Ther are a couple of *"gotyas"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is baswically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are teh details:
+Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. Ther are a couple of *"gotyas"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
 *Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
@@ -197,7 +200,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 ### 1. Anti-Polarization Shunt Circuit
 
  A big deal for just one  resistor.  **DONE!**
- *TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic*
+ ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~
  
 * The 600kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
 * Note: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
