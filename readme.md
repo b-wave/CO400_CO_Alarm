@@ -58,7 +58,7 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
   - This chip also supports low-power by switching off things like the Thermistor temperature sensor and the amplifiers to save power.
   - Since it is a saftey device it also provides a power-cycle with an NPN transistor switch (Q1) a PN2222 temporatily taking the battery voltage down trough (R6) controlled by a port (AN3) - proabibily on a watchdog timer?
   - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests
-  - The LED (D4) /Thermistor (TH1) are simultainioisly controlled  by pulling (RC0) Low.
+  - The LED (D4) /Thermistor (TH1) are controlled simultaneously by pulling (RC0) Low.
   -  SW1 is the TEST/SILENCE button to input (RC5).
   -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. 
 
@@ -69,10 +69,7 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
 
 ### Score!  
 When a chip company gets selected to go in a product they get a "socket" **Microchip** got two on this board! 
-The **MCP6042**, from **Microchip Technology Inc.** is a  high performance operational amplifier. The **MCP6042** operates with
-a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier.
-
-The MCP6042 amplifier acts in this device as a Transimpedance Amplifier (TIA). All the current from the sensor is forced to flow through the feedback resistor The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications make this op amp ideal impedance characteristics and bandwidth 
+The **MCP6042**, from **Microchip Technology Inc.** is a  high performance operational amplifier. The **MCP6042** amplifier acts in this device as a Transimpedance Amplifier (TIA). All the current from the sensor is forced to flow through the feedback resistor The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications make this op amp ideal impedance characteristics and bandwidth 
 for applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
@@ -114,7 +111,7 @@ This a microscope picture of the inductor, i was trying to get any indication of
   - Low Quiescent Current - Low power design feature
   - 10V Boost Converter regulator - That's a lot of volts from a couple of 1.5 V AA batteries
   - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well.
-  - Voltage Regulation buck to 3.0V or 3.3V - It is set by a logic input used to set the Vreg output.
+  - Voltage Regulation for to 3.0V or 3.3V - It is set by a logic input used to set the Vreg output.
   - Voltage Regulation for +5 Volts - For logic circuits
   - Low Battery Detection - not used in this circuit
   - LED Driver- not used in this circuit 
@@ -130,10 +127,10 @@ Note: the solder side is mirrored and enhanced - like viewing the board through 
 </p>
 
 ### X-ray Vision.
-The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So no X-ray vision needed,  I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - but an X-ray view would have been better. 
+The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces. I had no editing Software on hand  that could do layers like this. So no X-ray vision needed. I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - but an X-ray view would have been better. 
 
 ### Buzzed it out
-I used my multimeter to do point-to-point and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. Assignment of component values was done later, with the help of component markings and measurements.  
+I used my multimeter to do point-to-point continuity tests and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. Assignment of component values was done later, with the help of component markings and measurements.  
 
 ### Board Takeover!
 I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. This would allow not only to reprogram the chip off of the board but the socket also would alow me to jumper into an Arduino and run the sensor that way. Alternatively, simply soldering in short jumper wires to the pads after removing the chip would allow me to use a breadboard. 
@@ -156,7 +153,7 @@ Hopefully, it may be usefull to someone - maybe as part of your post-apocalyptic
 ~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE**
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for a saftey device these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
+Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
 *Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
