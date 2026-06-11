@@ -9,7 +9,8 @@ This device is a sensor and alarm device (ca. 2009) which has reached its end-of
 <p align="center">
   <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
 </p>
-Note: The date: *2009 SEP 7* This device was indicating the five-chirp per minute warning: End-of-life. 
+
+Note:  **2009 SEP 7** This device was indicating the five-chirp per minute warning: End-of-life. 
 
 ## Hardware Description
 The hardware has several interesting, some unusual, and some familiar parts.  <p align="center">
@@ -23,7 +24,7 @@ I did not kow what to expect, i was tinking it would be a simple sensor tied to 
 - **TGS-5042** CO Sensor
 - **PIC16F88** Microcontroller
 - **MCP6042** Op amp
-- **RE46C107** DC to DC Converter, Voltage Regulator and Piezoelectric Horn Driver.
+- **RE46C107** DC to DC Converter, Voltage Regulator and Piezoelectric Horn Driver
 
 ### Details and Test Software 
    - **Schematics!** PCB reverse engineering 
@@ -38,7 +39,7 @@ When I first saw this device I thought it was a battery. There was even about 0.
 
 ### It acts like a Fuel Cell?
 
-The TGS5042 is a fuel cell type sensor. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
+The **TGS5042** is a fuel cell type sensor. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
 
 ### Note the number: 1642
 Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description.  
@@ -49,7 +50,7 @@ Each sensor has a printed calibration number (see photo) This stands for 1.642nA
   <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
 
-Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. What does the "D" stamped on TP1 mean? 
+Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. *What does the **"D"** stamped on TP1 mean?* 
 
 ### Features 
 The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  Some of the key features/interfaces:
@@ -65,10 +66,11 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
 </p>
 
 ### Score!  
-When a chip company gets selected to go in a product they get a "socket" Microchip got two on this board! 
-The MCP6042, from Microchip Technology Inc. is a  high performance operational amplifier. The MCP6042 operates with
+When a chip company gets selected to go in a product they get a "socket" **Microchip** got two on this board! 
+The **MCP6042**, from **Microchip Technology Inc.** is a  high performance operational amplifier. The **MCP6042** operates with
 a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier.
-The MCP6042 amplifier operates in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal 
+
+The MCP6042 amplifier acts in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal 
 for low frequency applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
@@ -76,20 +78,20 @@ for low frequency applications, such as sensor conditioning. We will go into the
    - Low Quiescent Current: <1 µA (600 nA/amplifier typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
-**Note:**  The 1M Resistor and 100nF capacitor seenin th photo match the reference circuit from the TGS-5042 Sensor documentaion. 
+**Note:**  The 1M Resistor and 100nF capacitor seenin th photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
 
 ## The RE46C107  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
-I had to remove the  piezoelectric transducer but that 16-pin DIP on th left side of the board is the RE46C107
+This is kind of a multipurpose specially chip. I had to remove the  piezoelectric transducer to reveal it but that 16-pin DIP on the left side of the board is the **RE46C107**
 <p align="center">
   <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
 </p>
  
-The **RE46C107** is manufactured R&E International *A Subsidiary of Microchip Technology Inc.*  Is this a third and last "socket" win? Yes I think it is a third win! This is an interesting chip I never heard of. The RE46C107 is intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
+The **RE46C107** is manufactured R&E International *A Subsidiary of Microchip Technology Inc.*  Is this a third and last "socket" *win?* Yes, I think it is a third win! This is an interesting chip I never heard of. The RE46C107 is intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
 ### Alarming
 The circuit features a DC-to-DC up-converter and driver circuit suitable for driving a piezoelectric horn. Oh, so that's how they get such a loud siren out of 3V batteries and there is a spec for alarm devices have to be so many dB (loud).  
 ### Boost it!
-A selectable  3.0V or 3.3V A 5 Volt regulator is also provided for microprocessor voltage regulation. This curcuit uses the 3-Volt setting. 
+A selectable  3.0V or 3.3V A 5 Volt regulator is also provided for microprocessor voltage regulation. This curcuit uses the 3.3-Volt setting. 
 ### Hidden in Plain sight 
 It also has a LED Driver and low battery detection but for some reason these features were not used in this product. This chip is located under the Piezo Horn, so i removed it to get a look at these circuits. 
 <p align="center">
@@ -97,7 +99,7 @@ It also has a LED Driver and low battery detection but for some reason these fea
 </p>
 
 ### Scope Out the Supporting Parts
-This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor. There is one small signal diode i used a 1N914/1N4148.  Ther4en there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  so i just used the same for the other diode. 
+This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor. There is one small signal diode i used a 1N914/1N4148.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  so i just used the same for the other diode. 
 
     Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
@@ -134,7 +136,7 @@ I used my multimeter to do point-to-point and began to capture the circuits in K
 ### Board Takeover!
 I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. this would allow not only to reprogram the chip off of the board but the socket would alow me to jumper into an Arduino and run the sensor that way.
 
-### DFM 
+### DFM & DFT
 One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment fot a "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. 
 
 ### Not My Problem
@@ -194,7 +196,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 ### 1. Anti-Polarization Shunt Circuit
 
- A big deal for just one  resistor.  
+ A big deal for just one  resistor.  **DONE!**
  *TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic*
  
 * The 600kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
