@@ -5,14 +5,12 @@
 	(uuid "409a7a84-5ab7-4d64-8c87-b85c4dc3d66b")
 	(paper "A")
 	(title_block
-		(title "First Alert Model CO400 CO Alarm (ca. 2006)")
-		(date "2026-06-04")
-		(rev "A")
-		(company "4) TP1 (RA0) has some seral data every 2.5 sec !?!")
-		(comment 1 "3) RESET (AN3) Causes reset by shorting Vbat ")
-		(comment 2 "2) RC0 -> LOW  for LED ON & Thermistor Enable")
-		(comment 3 "1) Reverse Engineered - there may be errors! ")
-		(comment 4 "NOTES:")
+		(title "First Alert Model CO400 CO Alarm (ca. 2009)")
+		(date "2026-06-10")
+		(rev "B")
+		(comment 2 "B 2026-06-10 Fixed +3V3 Rail and resistor values R15, R16, & R17\"")
+		(comment 3 "A 2026-06-04 Initial Schematic Capture - Caution do not build yet\"! ")
+		(comment 4 "REVISIONS:")
 	)
 	(lib_symbols
 		(symbol "Library:1N5818"
@@ -3847,6 +3845,18 @@
 			(embedded_fonts no)
 		)
 	)
+	(rectangle
+		(start 232.41 114.3)
+		(end 245.11 116.84)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid 5afb8c37-d0a8-4d5e-bf8a-0f1467e46d63)
+	)
 	(text "(Battery Test?)"
 		(exclude_from_sim no)
 		(at 84.328 188.214 0)
@@ -3856,6 +3866,16 @@
 			)
 		)
 		(uuid "01015169-dfce-41d3-bcda-69705a8bdb55")
+	)
+	(text "1) Not for production "
+		(exclude_from_sim no)
+		(at 197.866 20.066 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "07c10079-859f-4cd8-b715-2f057860a70b")
 	)
 	(text "(2)"
 		(exclude_from_sim no)
@@ -3887,6 +3907,16 @@
 		)
 		(uuid "2fc186a7-3ed8-4d43-88d4-bf3451a0621f")
 	)
+	(text "(6)"
+		(exclude_from_sim no)
+		(at 149.352 152.908 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "4b99adce-2ea6-479e-ad10-acdf8c1d463a")
+	)
 	(text "(Figaro TGS5042)"
 		(exclude_from_sim no)
 		(at 140.462 116.078 0)
@@ -3896,6 +3926,27 @@
 			)
 		)
 		(uuid "6b688510-c7f6-4ec3-aff9-ec68066f9f2b")
+	)
+	(text "NOTES:"
+		(exclude_from_sim no)
+		(at 180.594 16.002 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "6e47bae4-3b72-478b-b2f8-f6627513ce04")
+	)
+	(text "3) RESET (AN3) Causes reset by shorting Vbat "
+		(exclude_from_sim no)
+		(at 186.69 25.908 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6e78ba95-2992-4150-a169-22be7be69fcf")
 	)
 	(text "S"
 		(exclude_from_sim no)
@@ -3917,6 +3968,16 @@
 		)
 		(uuid "7a683315-49ee-4d0d-9c2b-920411270012")
 	)
+	(text "(5)"
+		(exclude_from_sim no)
+		(at 149.86 141.224 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "81458c04-9f0c-4447-af5f-481cb40ab6ce")
+	)
 	(text "(2)"
 		(exclude_from_sim no)
 		(at 75.692 113.03 0)
@@ -3926,6 +3987,17 @@
 			)
 		)
 		(uuid "8a00a1a2-3331-4a72-afcb-f4c42d3403da")
+	)
+	(text "2) RC0 -> LOW  for LED ON & Thermistor Enable"
+		(exclude_from_sim no)
+		(at 186.69 22.86 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "9791c758-b025-4f56-9fda-56dede6ae09e")
 	)
 	(text "Alarm & Power "
 		(exclude_from_sim no)
@@ -3937,15 +4009,26 @@
 		)
 		(uuid "aa945879-d591-4764-bfb4-296e82aa6465")
 	)
-	(text "(Sensor Enable/Test?)"
+	(text "(Sensor Enable/Test1)"
 		(exclude_from_sim no)
-		(at 149.098 133.35 0)
+		(at 148.59 133.604 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 		)
 		(uuid "b2ba25d8-6350-47ad-a09e-6dbf37b90650")
+	)
+	(text "5) Test1 Modes:\n	1 HiZ - Normal mode  \n	2 + Vcc ( overrides sensor) read results on AN1 and AN6\n"
+		(exclude_from_sim no)
+		(at 186.69 33.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c1b99ff3-be98-4065-9490-24c9918a9c69")
 	)
 	(text "Processor"
 		(exclude_from_sim no)
@@ -3957,9 +4040,41 @@
 		)
 		(uuid "d083459b-5e19-403a-b599-7c5b0d62cb69")
 	)
-	(text "(Amplifier Test?) "
+	(text "4) TP1 (RA0) has some seral data every 2.5 sec !?!"
 		(exclude_from_sim no)
-		(at 151.13 154.686 0)
+		(at 186.69 28.448 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d0e9a6cd-cc49-4712-a19a-6a0d9ad30b4f")
+	)
+	(text "6) Test 2 Modes:\n	1 HiZ - Normal mode ( disables) \n	2 + Vcc (pulse 0.56 ms) charge C3 for quick reads\n	3 Analog IN - Reads test voltage int U3a"
+		(exclude_from_sim no)
+		(at 186.69 40.386 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "e3f9ab99-4b0a-4668-b853-6023be2c38bf")
+	)
+	(text "**0.298V**"
+		(exclude_from_sim no)
+		(at 238.76 116.078 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "e5111de2-5fe3-49d5-8489-f8035697580f")
+	)
+	(text "(Amplifier Test 2) "
+		(exclude_from_sim no)
+		(at 148.082 145.796 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -4018,6 +4133,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "29dcffd5-fc3f-47df-a8c2-eafedc368deb")
+	)
+	(junction
+		(at 106.68 63.5)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2c6bd384-a1e9-4265-b199-4db3779a6293")
 	)
 	(junction
 		(at 196.85 104.14)
@@ -4314,6 +4435,16 @@
 			(type default)
 		)
 		(uuid "0dc99463-cbf3-4445-8644-62ba094b5d20")
+	)
+	(polyline
+		(pts
+			(xy 219.71 118.11) (xy 222.25 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0de522dd-6853-446b-b1f3-ed6e93886bf7")
 	)
 	(wire
 		(pts
@@ -4757,7 +4888,17 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 68.58) (xy 106.68 78.74)
+			(xy 106.68 63.5) (xy 105.41 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5b015da3-6bec-48b6-a2c3-187d2dfd1632")
+	)
+	(wire
+		(pts
+			(xy 106.68 63.5) (xy 106.68 68.58)
 		)
 		(stroke
 			(width 0)
@@ -4994,6 +5135,16 @@
 			(type default)
 		)
 		(uuid "85f2aaae-1006-4e20-888e-c7a7eedbf7be")
+	)
+	(polyline
+		(pts
+			(xy 222.25 115.57) (xy 232.41 115.57)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8adbc53d-d2d3-4e30-9d4a-3cbc647ee950")
 	)
 	(wire
 		(pts
@@ -5637,7 +5788,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 63.5) (xy 105.41 63.5)
+			(xy 110.49 63.5) (xy 106.68 63.5)
 		)
 		(stroke
 			(width 0)
@@ -6506,7 +6657,7 @@
 				)
 			)
 		)
-		(property "Value" "439k"
+		(property "Value" "47k"
 			(at 212.344 128.27 90)
 			(effects
 				(font
@@ -7288,7 +7439,7 @@
 				)
 			)
 		)
-		(property "Value" "590k"
+		(property "Value" "470k"
 			(at 226.06 121.92 90)
 			(effects
 				(font
@@ -8877,13 +9028,12 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+3V0"
-			(at 113.538 63.5 90)
+		(property "Value" "+3V3"
+			(at 114.046 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -8920,71 +9070,6 @@
 			(project ""
 				(path "/409a7a84-5ab7-4d64-8c87-b85c4dc3d66b"
 					(reference "#PWR03")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 106.68 78.74 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "784307ca-59d2-4e0c-9eb2-d0cb8e9440f8")
-		(property "Reference" "#PWR011"
-			(at 106.68 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 106.68 83.82 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 106.68 78.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 106.68 78.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 106.68 78.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5a7be667-7ce0-40d2-a3a6-f47754a856fa")
-		)
-		(instances
-			(project "Model_CO400"
-				(path "/409a7a84-5ab7-4d64-8c87-b85c4dc3d66b"
-					(reference "#PWR011")
 					(unit 1)
 				)
 			)
@@ -10113,7 +10198,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "600k"
+		(property "Value" "100K"
 			(at 162.56 102.8699 0)
 			(effects
 				(font
@@ -10380,13 +10465,12 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+3V0"
-			(at 114.3 120.142 90)
+		(property "Value" "+3V3"
+			(at 114.3 119.634 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -10446,13 +10530,12 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+3V0"
-			(at 233.172 52.324 0)
+		(property "Value" "+3V3"
+			(at 236.22 52.324 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -10548,28 +10631,28 @@
 			)
 		)
 		(pin "2"
-			(uuid "946b0418-1127-4dfa-8a61-48357de05756")
+			(uuid "946b0418-1127-4dfa-8a61-48357de05757")
 		)
 		(pin "3"
-			(uuid "8ff24334-78f0-4868-ad49-020b0e19f51f")
+			(uuid "8ff24334-78f0-4868-ad49-020b0e19f520")
 		)
 		(pin "1"
-			(uuid "9939193a-1306-434d-8572-f3ea7ed44bed")
+			(uuid "9939193a-1306-434d-8572-f3ea7ed44bee")
 		)
 		(pin "6"
-			(uuid "54cc302a-755b-49d0-baed-20464e9027e5")
+			(uuid "54cc302a-755b-49d0-baed-20464e9027e6")
 		)
 		(pin "4"
-			(uuid "07669f4d-0192-40b3-823e-5d478d503ea8")
+			(uuid "07669f4d-0192-40b3-823e-5d478d503ea9")
 		)
 		(pin "8"
-			(uuid "3873c212-6d80-425e-a456-cc35419acc65")
+			(uuid "3873c212-6d80-425e-a456-cc35419acc66")
 		)
 		(pin "7"
-			(uuid "8f2f472f-fe34-4b64-a0b6-221ab8fe4956")
+			(uuid "8f2f472f-fe34-4b64-a0b6-221ab8fe4957")
 		)
 		(pin "5"
-			(uuid "504fc98f-c035-417e-a857-66e1281d0792")
+			(uuid "504fc98f-c035-417e-a857-66e1281d0793")
 		)
 		(instances
 			(project ""
@@ -10955,7 +11038,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+5V"
+		(property "Value" "+3V3"
 			(at 234.95 125.7299 90)
 			(effects
 				(font
