@@ -218,9 +218,9 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 ### 4. Stage 2: Voltage Buffer & Baseline Offset
 
-* Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, 7, Voltage Divider 590kΩ (R17) to $V_{CC}$ and 440kΩ (R16) to GND.
+* Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, & 7.  The circuit is configured as a buffer with the (-) input tied to the output pin. A voltage Divider consisting of (R17) to $V_{CC}$ and (R16) to GND.
 * Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
-* Voltage Divider (Pin 5): The 590kΩ (R17) and 440kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
+* Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
    * Note: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
 
 ### ADC / Buffer Validation Circuit 2 (RA1/AN1)
