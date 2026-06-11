@@ -72,8 +72,8 @@ When a chip company gets selected to go in a product they get a "socket" **Micro
 The **MCP6042**, from **Microchip Technology Inc.** is a  high performance operational amplifier. The **MCP6042** operates with
 a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier.
 
-The MCP6042 amplifier acts in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal impedance characteristics and bandwidth 
-for low frequency applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
+The MCP6042 amplifier acts in this device as a Transimpedance Amplifier (TIA). All the current from the sensor is forced to flow through the feedback resistor The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications make this op amp ideal impedance characteristics and bandwidth 
+for applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
    - Dual Amplifier in an 8-pin DIP Package
