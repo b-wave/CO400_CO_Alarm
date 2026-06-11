@@ -218,7 +218,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 * Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, & 7.  The circuit is configured as a buffer with the (-) input tied to the output pin. A voltage Divider consisting of (R17) to $V_{CC}$ and (R16) to GND.
 * Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
-* Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point around 1.4V.
+* Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point above the ground level.
    * Note: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
 
 ### ADC / Buffer Validation Circuit 2 (RA1/AN1)
@@ -238,6 +238,7 @@ Including the *Serial data?* I found :
 ### Core Power Architecture & Baseline Verifications
 The interface board utilizes a Microchip RE46C107 ASIC to manage power distribution, battery step-up operations, and reference voltage rails. 
 
+### Notes and Comments 
 * **Main System Reference (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
 * **Piezo/Amplifier Rail (`VO`):** Boosted internally to **4.5V** via the chip's inductive DC-to-DC step-up circuit.
 * **Stage 2 Baseline Bias (Pin 5):** Biased to a factory baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
