@@ -37,7 +37,7 @@ I did not kow what to expect, i was tinking it would be a simple sensor tied to 
 </p>
 When I first saw this device I thought it was a battery. There was even about 0.5V between the terminals. This is the sensor.  It is a miniture lab consisting of fuel-cell-type electrochemical sensor that outputs a tiny current strictly linear to the Carbon Monoxide (CO) gas concentration. It turns out seeing ~0.5V on the sensor pins when the board has no power supply is completely normal and expected for this specific component.
 
-### It acts like a Fuel Cell?
+### It Has a Fuel Cell?
 
 The **TGS5042** is a fuel cell type sensor. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
 
@@ -72,7 +72,7 @@ When a chip company gets selected to go in a product they get a "socket" **Micro
 The **MCP6042**, from **Microchip Technology Inc.** is a  high performance operational amplifier. The **MCP6042** operates with
 a single supply voltage as low as 1.4V, while drawing less than 1 µA of quiescent current per amplifier.
 
-The MCP6042 amplifier acts in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal 
+The MCP6042 amplifier acts in this device as a Transimpedance Amplifier (TIA). The specifications make this op amp ideal impedance characteristics and bandwidth 
 for low frequency applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
@@ -160,17 +160,7 @@ Most of the circuits have been explained in the previous secctions.  The reading
 *Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
-The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.  He is basically how this op amp works: 
-
-* Using a feedback resistor (R₁):
-$$V_{out} = I_s \times R_1$$ 
-* Using a load resistor (R₂):
-$$V_{out} = I_s \times R_2$$ 
-
-Where:
-
-* $I_s$ = Sensor output current (Amperes)
-* R = Resistor value (Ohms)
+The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.  
 
 ### 2. Calculating Sensor Current ($I_s$)
 To derive the raw sensor current in Amperes (A) from your circuit's measured output voltage, use the following formula:
@@ -201,10 +191,10 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 
 ### 1. Anti-Polarization Shunt Circuit
 
- A big deal for just one  resistor. It was verified by reading the color code as a 100K resistor.  
+ A big deal for just one  resistor. It was verified by reading the color code as measuring it would lead to incorrect result. see Notes below.
  ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~ **DONE!**
  
-* The 600kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
+* The 100kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
 * Note: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
 
 ### 2. Stage 1: Transimpedance Amplifier (TIA)
