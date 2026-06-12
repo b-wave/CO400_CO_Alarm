@@ -39,12 +39,12 @@ When I first saw this device I thought it was a battery. There was even about 0.
 
 ### It Has a Fuel Cell?
 
-The **TGS5042** is a fuel cell type sensor. That is, it generates electricity from an electrolyte and a gas. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
+Yes, the **TGS5042** is a fuel cell type sensor. That is, it generates electricity from an electrolyte and a gas. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
 
 ### Note the number: 1642
 Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description.  
 
-## PIC16F688 Microcontroller Chip
+## PIC16F688 (U2) Microcontroller Chip
 
 <p align="center">
   <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
@@ -63,7 +63,7 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
   -  Vbatt here is connected to (AN5) for battery voltage measurement.
   -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. TODO Retrace this circuit to try to find out what it does. 
 
-## MCP6042 Op Amp
+## MCP6042 (U3) Op Amp
 <p align="center">
   <img src="resources/WIN_20260530_15_49_09_Pro.jpg" width="225" alt="Transimpedance Amplifier">
 </p>
@@ -80,11 +80,11 @@ for applications, such as sensor conditioning. We will go into the details later
     
 **Note:**  The 1M Resistor and 100nF capacitor seen in the photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
 
-## The RE46C107  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
+## The RE46C107 (U1)  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
 This is kind of a multipurpose specially chip. I had to remove the  piezoelectric transducer to reveal it but that 16-pin DIP on the left side of the board is the **RE46C107**
 <p align="center">
-  <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
+  <img src="resources/RE46C107(U1).jpg" width="225" alt="RE-46C07">
 </p>
  
 The **RE46C107** is manufactured R&E International *A Subsidiary of Microchip Technology Inc.*  Is this a third and last "socket" *win?* Yes, I think it is a third win! This is an interesting chip I never heard of. The RE46C107 is intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
