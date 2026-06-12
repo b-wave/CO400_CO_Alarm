@@ -236,18 +236,18 @@ Including the *Serial data?* I found :
 *Comming Soon!*
 
 ### Notes and Comments 
-* **Note: Main System Reference (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
-* **Note: Piezo/Amplifier Rail (`VO`):** Boosted internally to **4.5V** via the chip's inductive DC-to-DC step-up circuit.
-* **Note: Stage 2 Baseline Bias (Pin 5):** Biased to a factory baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
+* **Note (1): Measured 3v3 Power Rail (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
+* **Note (2): Measured +5V Rail (`VO`):** Boosted to **4.54 V** via the chip's  DC-to-DC step-up circuit.
+* **Note (3): Measured Op Amp Stage 2 Baseline Bias (Pin 5):** Biased to at factory to a baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
 * 
-## Corrected Schematic Values (3.3V System Target)
+## (4) Corrected Schematic Values (3.3V System Target)
 To manually replicate the verified *in-situ* baseline voltage of ~0.298V without utilizing non-standard values, substitute the theoretical divider values with standard 1% components:
 
-* **Top Divider Resistor (R_top):** Swap out for a standard **487kΩ** (or **470kΩ** as a close alternative).
+* **  Top Divider Resistor (R_top):** Swap out for a standard **487kΩ** (or **470kΩ** as a close alternative).
 * **Bottom Divider Resistor (R_bottom):** Swap out for a standard **47kΩ**.
 * **Resulting Baseline:** Yields an explicit stable bias of **0.298V**, mirroring the production ASIC profile perfectly.
 * 
-### Anti-Polarization Shunt Circuit
+### (5) Anti-Polarization Shunt Circuit
 * **Component:** `100kΩ` Resistor (**BROWN-BLACK-YELLOW**) connected directly across the Working Electrode (**WE**) and Counter Electrode (**CE**).
 * **Function:** Electrochemical cells naturally behave like tiny batteries and will drift or suffer permanent degradation if they hold an electrical charge while unpowered. This resistor acts as a safe drain path when the system is off, maintaining a strict 0V potential between the electrodes.
 * **Bench-Testing Note:** Do not attempt to measure this resistor in-circuit using a standard Multimeter resistance setting. The active chemistry of the TGS5042 injects a residual voltage into the traces, which skews the meter's test current and produces false, fluctuating resistance readings.
