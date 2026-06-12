@@ -10,7 +10,7 @@ This device is a sensor and alarm device (ca. 2009) which has reached its end-of
   <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
 </p>
 
-Note:  **2009 SEP 7** This device was indicating the five-chirp per minute warning: End-of-life. 
+Note: The date: **2009 SEP 7** the chip date codes are also around this year. This device was indicating the five-chirp per minute warning: End-of-life. 
 
 ## Hardware Description
 The hardware has several interesting, some unusual, and some familiar parts.  <p align="center">
