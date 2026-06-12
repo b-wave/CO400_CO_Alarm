@@ -137,7 +137,7 @@ I used my multimeter to do point-to-point continuity tests and began to capture 
 I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. This would allow not only to reprogram the chip off of the board but the socket also would alow me to jumper into an Arduino and run the sensor that way. Alternatively, simply soldering in short jumper wires to the pads after removing the chip would allow me to use a breadboard. 
 
 ### DFM & DFT
-One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled. 
+One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled. Oh and i did go back an look at these, i can see the pin pricks right dead center on most of these. Design For Test (DFT) yes, we have lots of built in test on this board - i will go into detail on these later.
 
 ### Not My Problem
 This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still had some questions about power distribution etc. 
@@ -250,5 +250,34 @@ The color code on these two resistors were hard to read, and typical of precisio
 ### (5) Anti-Polarization Shunt Circuit
 * **Component:** `100kΩ` Resistor (R15) connected directly across the Working Electrode (**WE**) and Counter Electrode (**CE**).
 * **Function:** Electrochemical cells naturally behave like tiny batteries and will drift or suffer permanent degradation if they hold an electrical charge while unpowered. This resistor acts as a safe drain path when the system is off, maintaining a strict 0V potential between the electrodes.
-* **Bench-Testing Note:** Do not attempt to measure this resistor in-circuit using a standard Multimeter resistance setting. The active chemistry of the TGS5042 injects a residual voltage into the traces, which skews the meter's test current and produces false, fluctuating resistance readings.
+* **Bench-Testing Note:** I got lazy and tried to measure this resistor in-circuit using a standard Multimeter resistance setting. But the active chemistry of the TGS5042 injects a residual voltage into the traces, which skews the meter's test current and produces false, fluctuating resistance readings i got 600K which was a wierd value for a shunt.
+
+### Note (6)  Battery monitering circuits. 
+- **AN5**: is probabily for “static” battery monitor (slow ADC check of Vbat under light load / quiescent conditions).  
+- I think the "mystery" Vbat circuit to **RC4 &  RC3/AN7** is a “dynamic” check while the horn is being driven. Everything else on the board is regulated and relatively light load, so the horn is the “worst‑case punch” to the cells, and this little network lets the PIC *watch* that punch in real time.  This is how it may work: 
+  
+* **Is the horn path actually working?**  
+   - Drive RC4 → expect to see activity on RC3/AN7 through that RC network.  
+   - If RC3 stays flat → open piezo, broken driver, etc.
+
+* **How hard do the batteries sag under worst‑case load?**  
+   - While RC4 is hammering the horn, sample AN7.  
+   - Compare droop vs thresholds → decide low‑battery / EOL / fault.
+
+## References & Resources
+
+- BigClive teardown videos (excellent background on CO alarm design)
+  https://www.youtube.com/user/bigclivedotcom
+
+- Figaro TGS5042 CO Sensor Datasheet
+  https://www.figarosensor.com/product/docs/TGS%205042%20%281120%29.pdf
+
+- Microchip MCP6021 Op‑Amp Datasheet
+  https://ww1.microchip.com/downloads/en/DeviceDoc/20001685E.pdf
+
+- PIC16F688 Datasheet (microcontroller used in CO400)
+  https://ww1.microchip.com/downloads/en/DeviceDoc/41203F.pdf
+
+- US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
+  https://patents.google.com/patent/US6791453B1/en
 
