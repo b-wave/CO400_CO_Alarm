@@ -151,7 +151,7 @@ Hopefully, it may be usefull to someone - maybe as part of your post-apocalyptic
   <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
 </p>
 
-~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE**
+~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE** Notes: (1) (2) (3)
 
 ## Circuit Analysis:  
 Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
@@ -190,7 +190,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 ### 1. Anti-Polarization Shunt Circuit
 
  A big deal for just one  resistor. It was verified by reading the color code as measuring it would lead to incorrect result. see Notes below.
- ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~ **DONE!**
+ ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~ **DONE!** Note (5) 
  
 * The 100kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
 * Note: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
