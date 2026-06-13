@@ -42,7 +42,9 @@ When I first saw this device I thought it was a battery. There was even about 0.
 Yes, the **TGS5042** is a fuel cell type sensor. That is, it generates electricity from an electrolyte and a gas. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
 
 ### Remember the number: 1642
-Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description.  
+Each sensor has a printed calibration number and matching barcode (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description. 
+
+The other code **090810** is likely the date code for: **10 August 2009** which is close to the manufactured date. 
 
 ## PIC16F688 (U2) Microcontroller Chip
 
@@ -50,7 +52,7 @@ Each sensor has a printed calibration number (see photo) This stands for 1.642nA
   <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
 
-Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. *does the **"D"** stamped on TP1 mean check for data?* 
+Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. *does the **"D"** stamped on TP1 mean checked for data?* 
 
 ### Features 
 The **PIC16F688** is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  Some of the key features/interfaces:
