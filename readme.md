@@ -61,7 +61,7 @@ The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology 
   - The LED (D4) & Thermistor (TH1) are controlled simultaneously by pulling (RC0) Low.
   -  SW1 is the TEST/SILENCE button connected to input (RC5).
   -  Vbatt here is connected to (AN5) for battery voltage measurement.
-  -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. TODO Retrace this circuit to try to find out what it does. 
+  -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. ~~TODO Retrace this circuit to try to find out what it does.~~ Done! see Note (6)
 
 ## MCP6042 (U3) Op Amp
 <p align="center">
