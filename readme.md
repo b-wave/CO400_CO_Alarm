@@ -266,7 +266,7 @@ The color code on these two resistors were hard to read, and typical of precisio
 
 ## References & Resources
 
-- BigClive teardown videos (excellent background on CO alarm design)
+- BigClive teardown videos (excellent, entertaining tell him who sent you!)
   https://www.youtube.com/user/bigclivedotcom
 
 - Figaro TGS5042 CO Sensor Datasheet
