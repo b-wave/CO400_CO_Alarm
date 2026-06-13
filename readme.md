@@ -10,7 +10,7 @@ This device is a sensor and alarm device (ca. 2009) which has reached its end-of
   <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
 </p>
 
-Note: The date: **2009 SEP 7** the chip date codes are also around this year. This device was indicating the five-chirp per minute warning: End-of-life. 
+The date: **2009 SEP 7** the chip date codes are also around this year. This device was indicating the five-chirp per minute warning: End-of-life. 
 
 ## Hardware Description
 The hardware has several interesting, some unusual, and some familiar parts.  <p align="center">
@@ -18,7 +18,7 @@ The hardware has several interesting, some unusual, and some familiar parts.  <p
 </p>
 
 ### One moment please.. 
-I did not kow what to expect, i was thinking it would be a simple sensor tied to a piezo beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actully took several hours over a few days to complete. And...I am not sure it is 100% correct so,  take it with about a pound of salt.
+I did not kow what to expect, i was thinking it would be a simple sensor tied to a piezo beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actually took several hours over a few days to complete. And...I am not sure it is 100% correct so,  take it with about a ~~pinch~~ pound of salt.
 
 ### The hardware 
 - **TGS-5042** CO Sensor
@@ -35,13 +35,13 @@ I did not kow what to expect, i was thinking it would be a simple sensor tied to
 <p align="center">
   <img src="resources/20260530_115704.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
-When I first saw this device I thought it was a battery. There was even about 0.5V between the terminals. This is the sensor.  It is a miniture lab consisting of fuel-cell-type electrochemical sensor that outputs a tiny current strictly linear to the Carbon Monoxide (CO) gas concentration. It turns out seeing ~0.5V on the sensor pins when the board has no power supply is completely normal and expected for this specific component.
+When I first saw this device I thought it was a battery. There was even about 0.5V between the terminals. This is the sensor.  It is a miniture lab consisting of fuel-cell-type electrochemical sensor that outputs a tiny current strictly linear to the Carbon Monoxide (CO) gas concentration. It turns out seeing voltage on the sensor pins when the board has no power supply is completely normal and expected for this specific component.
 
 ### It Has a Fuel Cell?
 
 Yes, the **TGS5042** is a fuel cell type sensor. That is, it generates electricity from an electrolyte and a gas. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
 
-### Note the number: 1642
+### Remember the number: 1642
 Each sensor has a printed calibration number (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description.  
 
 ## PIC16F688 (U2) Microcontroller Chip
@@ -50,10 +50,10 @@ Each sensor has a printed calibration number (see photo) This stands for 1.642nA
   <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
 
-Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. *What does the **"D"** stamped on TP1 mean?* 
+Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. *does the **"D"** stamped on TP1 mean check for data?* 
 
 ### Features 
-The PIC16F688 is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  Some of the key features/interfaces:
+The **PIC16F688** is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  Some of the key features/interfaces:
   - It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V.
   - This chip also supports low-power by switching off things like the Thermistor temperature sensor and the amplifiers to save power.
   - Since it is a saftey device it also provides a power-cycle with an NPN transistor switch (Q1) a PN2222 temporatily taking the battery voltage down trough (R6) controlled by a port (AN3) - proabibily on a watchdog timer?
@@ -78,7 +78,7 @@ for applications, such as sensor conditioning. We will go into the details later
    - Low Quiescent Current: <1 µA (600 nA/amplifier typical)
    - Wide Supply Voltage Range: 1.4V to 6.0V
     
-**Note:**  The 1M Resistor and 100nF capacitor seen in the photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
+* The 1M Resistor and 100nF capacitor seen in the photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
 
 ## The RE46C107 (U1)  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
@@ -87,13 +87,13 @@ This is kind of a multipurpose specially chip. I had to remove the  piezoelectri
   <img src="resources/RE46C107(U1).jpg" width="225" alt="RE-46C07">
 </p>
  
-The **RE46C107** is manufactured R&E International *A Subsidiary of Microchip Technology Inc.*  Is this a third and last "socket" *win?* Yes, I think it is a third win! This is an interesting chip I never heard of. The RE46C107 is intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
+The **RE46C107** is manufactured R&E International *A Subsidiary of **Microchip Technology Inc.***  Is this a third and last "socket" *win?* Yes, I think it is a third win! This is an interesting chip I never heard of. The **RE46C107** is an ASIC intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
 ### Alarming
 The circuit features a DC-to-DC up-converter and driver circuit suitable for driving a piezoelectric horn. Oh, so that's how they get such a loud siren out of 3V batteries and there is a spec for alarm devices have to be so many dB (loud).  
 ### Boost it!
 A selectable  3.0V or 3.3V A 5 Volt regulator is also provided for microprocessor voltage regulation. This curcuit uses the 3.3-Volt setting. 
 ### Hidden in Plain sight 
-It also has a LED Driver and low battery detection but for some reason these features were not used in this product. This chip is located under the Piezo Horn, so i removed it to get a look at these circuits. 
+It also has a LED Driver and low battery detection but for some reasons these features were not used in this product. This chip is located under the Piezo Horn, so i removed it to get a look at these circuits. 
 <p align="center">
   <img src="resources/WIN_20260530_15_49_50_Pro.jpg" width="225" alt="RE46C07 DC-DC converter Inductor">
 </p>
@@ -101,7 +101,7 @@ It also has a LED Driver and low battery detection but for some reason these fea
 ### Scope Out the Supporting Parts
 This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  There is another rectifier diode in the processor test circuits - not related to this chip- so i just used the same for that other diode. 
 
-    Notes: 
+    App Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
     - Schottky diode D1 must have maximum peak current rating of at least 1.5A and for best results should have forward voltage spec of less 
     than 0.5V at 1 Amp. 
@@ -122,13 +122,15 @@ How I captured the schematic. Having the datasheets and reference circuits helpe
 <p align="center">
   <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
 </p> 
-Note: the solder side is mirrored and enhanced - like viewing the board through the circuit side:
+The solder side is mirrored and contrast enhanced - like viewing the board through the circuit side:
 <p align="center">
   <img src="resources/20260531_104048.jpg" width="225" alt="CO400 PCB">
 </p>
 
 ### X-ray Vision.
-The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces throughthe component side. I had no editing software on hand that could do layers like this. So no X-ray vision needed. I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - but an X-ray view would have been better. 
+The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces throughthe component side. I had no editing software on hand that could do layers like this. So no X-ray vision needed.
+
+I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - *...but an X-ray view would have been better.* 
 
 ### Buzzed it out
 I used my multimeter to do point-to-point continuity tests and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. Assignment of component values was done later, with the help of component markings and measurements.  
@@ -137,15 +139,17 @@ I used my multimeter to do point-to-point continuity tests and began to capture 
 I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. This would allow not only to reprogram the chip off of the board but the socket also would alow me to jumper into an Arduino and run the sensor that way. Alternatively, simply soldering in short jumper wires to the pads after removing the chip would allow me to use a breadboard. 
 
 ### DFM & DFT
-One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled. Oh and i did go back an look at these, i can see the pin pricks right dead center on most of these. Design For Test (DFT) yes, we have lots of built in test on this board - i will go into detail on these later.
+One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled.
+
+Oh, and i did go back an look at these, i can see the pin pricks right dead center on most of these. Design For Test (DFT) yes, we have lots of built in test on this board - more details on these later.
 
 ### Not My Problem
-This effort was to see how this thing worked, not to copy or reproduce it.  There are some errors i am aware of on the schematic i will probabily fix, and i still had some questions about power distribution etc. 
+This effort was to see how this thing worked, not to copy or reproduce it.  ~~There are some errors i am aware of on the schematic i will probabily fix, and i still had some questions about power distribution etc.~~ Done, mostly addressed.
 
 ### Here is the Schematic
 Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. 
 
-Hopefully, it may be usefull to someone - maybe as part of your post-apocalyptic tricorder device project?   
+Hopefully, it may be usefull to someone - **maybe as part of your next post-apocalyptictricorder device project?** 
 
 <p align="center">
   <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
@@ -154,7 +158,7 @@ Hopefully, it may be usefull to someone - maybe as part of your post-apocalyptic
 ~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE** Notes: (1) (2) (3)
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the Figaro TGS5042 sensor (U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
+Most of the circuits have been explained in the previous secctions.  The reading of the **Figaro TGS5042** sensor (schematic U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
 *Demo Software - Comming Soon!*
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
