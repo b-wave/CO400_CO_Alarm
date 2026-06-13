@@ -193,7 +193,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
  ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~ **DONE!** Note (5) 
  
 * The 100kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
-* Note: Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
+* Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
 
 ### 2. Stage 1: Transimpedance Amplifier (TIA)
 
