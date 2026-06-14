@@ -201,6 +201,10 @@ $$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$
 
 OK with that out of the way, lets dig into some of these circuits. The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with the integrated Built-In Self-Test (BIST) diagnostics.
 
+<p align="center">
+  <img src="resources/TIA.png" width="500" alt="CO400 Schematic">
+</p>
+
 ### 1. Anti-Polarization Shunt Circuit
 
  A big deal for just one  resistor. It was verified by reading the color code as measuring it would lead to incorrect result. see Notes below.
@@ -217,25 +221,25 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
    * Filtering: The 100nF parallel feedback capacitor acts as a low-pass filter to smooth out high-frequency environmental noise.
    * Protection: The 2.2kΩ and 220Ω inline resistors protect the delicate op-amp inputs against unexpected current spikes.
 
-### Sensor Diagnostic Test 1 (RA5)
+### 3. Sensor Diagnostic Test 1 (RA5)
 
 * Circuit Path: Microprocessor Digital Pin → Diode (D2) Anode on MCU side → 1MΩ (R5) resistor → Pin 3 (Inverting Input). There small signal diode (D2) is probabily a 1N914 or 1N4148.
 * Normal Mode: The MCU configures its digital pin as a High-Z Input (or holds it HIGH). This reverse-biases the diode, isolating the diagnostic branch completely so it does not affect gas readings.
 * Self-Test Mode: The MCU drives this pin LOW. This pulls current away from Pin 3 through the 1MΩ resistor. The op-amp immediately compensates by driving its output (Pin 1) upward. The MCU checks for this predictable voltage step-up on the ADC to verify that the first stage op-amp loop is alive and electrically sound.
 
-### 3. Inter-Stage RC Filter
+### 4. Inter-Stage RC Filter
 
 * Key Components: 240Ω series resistor (R14), 100nF capacitor (C8) to Ground.
 * Function: Located between the first stage output (Pin 1) and second stage input (Pin 6). This passive low-pass filter acts as a hardware noise barrier. It strips away high-frequency ripple and digital switching noise before the signal enters the ADC buffer.
 
-### 4. Stage 2: Voltage Buffer & Baseline Offset
+### 5. Stage 2: Voltage Buffer & Baseline Offset
 
 * Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, & 7.  The circuit is configured as a buffer with the (-) input tied to the output pin. A voltage Divider consisting of (R17) to $V_{CC}$ and (R16) to GND.
 * Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
 * Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point above the ground level.
    * Note: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
 
-### ADC / Buffer Validation Circuit 2 (RA1/AN1)
+### 6. ADC / Buffer Validation Circuit 2 (RA1/AN1)
 
 * Circuit Path: Microprocessor Pin (RA1/AN1) → 10kΩ resistor (R1) → Pin 6 (U3B) The non-inverting input of the Buffer stage.
 * Dual Functionality:
