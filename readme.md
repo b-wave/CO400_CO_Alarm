@@ -253,8 +253,13 @@ Including the *Serial data?* I found :
     17:16:42.551 -> Δt=5166 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
     17:16:47.284 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
 
-It is definately PWM data. We are not sure of the bit's polarity this preamble may also be 0xAA 0x55 0xB5,,,,
-also w can see there are bits changing.  We will try to corrilate the changes to realworld inputs.
+It is definately PWM data. We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...**
+also we can see there are bits changing.  We will try to corrilate the changes to real world inputs.
+  * Manual Test Button
+  * Thermistor Test
+  * Low Battery Simulation
+  * CO Test
+  * 
 
 
 ### Notes and Comments 
