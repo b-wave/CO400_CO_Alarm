@@ -72,8 +72,7 @@ The **PIC16F688** is a 14-pin, 8-bit CMOS microcontroller from Microchip Technol
 
 ### Score!  
 When a chip company gets selected to go in a product they get a "socket" **Microchip** got two on this board the **PIC16F688** and  
-The **MCP6042** are both from **Microchip Technology Inc.**  The **MCP6042** is a  high performance operational amplifier used in this device as a Transimpedance Amplifier (TIA) for current to voltage conversion. In this configuration the current from the sensor is forced to flow through the feedback resistor. The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications for this op amp -like impedance characteristics and gain bandwidth- are ideal 
-for applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
+The **MCP6042** are both from **Microchip Technology Inc.**  The **MCP6042** is a  high performance operational amplifier used in this device as a Transimpedance Amplifier (TIA) for current to voltage conversion. In this configuration the current from the sensor is forced to flow through the feedback resistor. The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications for this op amp -like impedance characteristics and gain bandwidth- are ideal for applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
 
 ### Key specifications include: 
    - Dual Amplifier in an 8-pin DIP Package
@@ -84,18 +83,26 @@ for applications, such as sensor conditioning. We will go into the details later
 
 ## The RE46C107 (U1)  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
 
-This is kind of a multipurpose specially chip. I had to remove the  piezoelectric transducer to reveal it but that 16-pin DIP on the left side of the board is the **RE46C107**
+This is kind of a multipurpose specially chip. 
+
+The **RE46C107** is manufactured R&E International *A Subsidiary of **Microchip Technology Inc.***  Is this a third and last "socket" *win?* Yes, I think it is a third win! 
+
+This is an interesting chip I never heard of. The **RE46C107** is an ASIC intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
+
 <p align="center">
   <img src="resources/RE46C107(U1).jpg" width="225" alt="RE-46C07">
 </p>
- 
-The **RE46C107** is manufactured R&E International *A Subsidiary of **Microchip Technology Inc.***  Is this a third and last "socket" *win?* Yes, I think it is a third win! This is an interesting chip I never heard of. The **RE46C107** is an ASIC intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
+
+### Hidden in Plain sight 
+This chip is located under the Piezo Horn, I had to remove the  piezoelectric to reveal it but the 16-pin DIP on the left side of the board is the **RE46C107**
+
 ### Alarming
 The circuit features a DC-to-DC up-converter and driver circuit suitable for driving a piezoelectric horn. Oh, so that's how they get such a loud siren out of 3V batteries and there is a spec for alarm devices have to be so many dB (loud).  
 ### Boost it!
 A selectable  3.0V or 3.3V A 5 Volt regulator is also provided for microprocessor voltage regulation. This curcuit uses the 3.3-Volt setting. 
-### Hidden in Plain sight 
-It also has a LED Driver and low battery detection but for some reasons these features were not used in this product. This chip is located under the Piezo Horn, so i removed it to get a look at these circuits. 
+### No Use
+It also has a **LED Driver** and **low battery detection** but for some reasons these features were not used in this product. 
+
 <p align="center">
   <img src="resources/WIN_20260530_15_49_50_Pro.jpg" width="225" alt="RE46C07 DC-DC converter Inductor">
 </p>
@@ -105,19 +112,17 @@ This a microscope picture of the inductor, i was trying to get any indication of
 
     App Notes: 
     - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
-    - Schottky diode D1 must have maximum peak current rating of at least 1.5A and for best results should have forward voltage spec of less 
-    than 0.5V at 1 Amp. 
+    - Schottky diode D1 must have maximum peak current rating of at least 1.5A and for best results should have forward voltage spec of less than 0.5V at 1 Amp. 
 
-    
 ### Key Specifications Include:
-
   - Low Quiescent Current - Low power design feature
   - 10V Boost Converter regulator - That's a lot of volts from a couple of 1.5 V AA batteries
   - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well.
   - Voltage Regulation for to 3.0V or 3.3V - It is set by a logic input used to set the Vreg output.
   - Voltage Regulation for +5 Volts - For logic circuits
-  - Low Battery Detection - not used in this circuit
-  - LED Driver- not used in this circuit 
+  - Low Battery Detection - *not used in this circuit*
+  - LED Driver- *not used in this circuit*
+
 ## Methods to My Madness:  
 How I captured the schematic. Having the datasheets and reference circuits helped. The following two pictures were made to help. 
 
@@ -141,27 +146,30 @@ I used my multimeter to do point-to-point continuity tests and began to capture 
 I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. This would allow not only to reprogram the chip off of the board but the socket also would alow me to jumper into an Arduino and run the sensor that way. Alternatively, simply soldering in short jumper wires to the pads after removing the chip would allow me to use a breadboard. 
 
 ### DFM & DFT
-One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or *Design For Manufacturing* (DFM). Another clue is there are a couple of large holes in the board. (DAT1, DAT2) these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled.
+One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads that pass over the pads, so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or **Design For Manufacturing (DFM).** 
 
-Oh, and i did go back an look at these, i can see the pin pricks right dead center on most of these. Design For Test (DFT) yes, we have lots of built in test on this board - more details on these later.
+Another clue for **DFM**is there are a couple of large holes in the board. **(DAT1, DAT2)** these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled.
+
+Oh, and i did go back and look at these, i can see the pin pricks right dead center on most of these. 
+
+**Design For Test (DFT)** yes, we have lots of built in test on this board - more details on these later.
 
 ### Not My Problem
 This effort was to see how this thing worked, not to copy or reproduce it.  ~~There are some errors i am aware of on the schematic i will probabily fix, and i still had some questions about power distribution etc.~~ Done, mostly addressed.
 
-### Here is the Schematic
-Here is what i came up with so far.  I  may upodate it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. 
-
-Hopefully, it may be usefull to someone - **maybe as part of your next post-apocalyptictricorder device project?** 
+### the Schematic
+Here is what i came up with. I  may update it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. 
 
 <p align="center">
   <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
 </p>
 
 ~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE** Notes: (1) (2) (3)
+### Post-Apocalyptic? 
+Hopefully, the schematic may be usefull to someone - **maybe as part of your next post-apocalyptic tricorder found  device project?**
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the **Figaro TGS5042** sensor (schematic U4) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  Here are the details:
-*Demo Software - Comming Soon!*
+Most of the circuits have been explained in the previous secctions.  The reading of the **Figaro TGS5042** sensor (schematic U4, board SEN 1) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
 The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.  
