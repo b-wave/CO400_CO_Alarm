@@ -1,7 +1,7 @@
 # First Alert CO Alarm (Model CO400) - Teardown
 *A Work in Progress* 
 <p align="center">
-  <img src="resources/20260530_110405.jpg" width="225" alt="First Alert CO Alarm">
+  <img src="resources/20260530_110405.jpg" width="350" alt="First Alert CO Alarm">
 </p>
 
 ## Overview
@@ -256,13 +256,22 @@ The "serial" data is very interesting.  It could give all the insight to the wor
 <p align="center">
   <img src="resources/scope_traces/Packets.png" width="500" alt="Packets!">
 </p>
-They are 3v3 Arduino inputs safe and there are several differnt timings.  The most common spacing ie the ~2.5 Seconds. We may discuss the different timngs in detail  later, But the short story is they happen when the Status LED blinks.  
 
+* Packets! They are 3v3 Arduino inputs safe and there are several differnt timings.  The most common spacing ie the ~2.5 Seconds. We may discuss the different timngs in detail  later, But the short story is they happen when the Status LED blinks.  
 
+<p align="center">
+  <img src="resources/scope_traces/SDS00004.png" width="500" alt="Typical Packets">
+</p>
 
+* A typical Packet is about 40 mSec long.  Again this may be variable. When I started looking at the "bits" in these packets, to try to determine the baud rate so i could try a serial decoder, but i noticed that the timing of the bits was too regular, and the shortest pulse width would not be a standard baud rate. So, what is this protocol? 
 
+<p align="center">
+  <img src="resources/scope_traces/C400_preamble1.jpg" width="500" alt="Preamble">
+</p>
 
-Including the *Serial data?* I found :  
+* The Preamble.  So when i saw the beginning of the packets ( looking for start bits) i noticed this strange pattern. too short to be a byte or nibbe of data, the marking pulses wer very short compaired to the rest of the packet ( three of them ) and one long gap.  Was this deliberate or an artifact of eth CPU coming out of its slunmber?  I did a search and uncoverd the Patent that covers this protocol, they are called "rattle bits" and fits this implementation fairly closely.
+
+So with all this info it was time to spec out an Arduino sketch and tap into this data at TP1. ( CO400 RAW PWM FRAME LOGGER v0.4.1 )  I hope to generate a table of what these frames mean.  Here is the first *Serial data?* I found :  
 
     17:16:11.039 -> ==============================================
     17:16:11.087 ->    CO400 RAW PWM FRAME LOGGER v0.4.1 ACTIVE
@@ -277,30 +286,34 @@ Including the *Serial data?* I found :
     17:16:42.551 -> Δt=5166 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
     17:16:47.284 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
 
-It is definately PWM data. We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...** 
+It is definately PWM data.  The packet decode is very consistant 60 bits. I am not able to see anything that looks like a checksum.  We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...** 
+
 The patent referenced below does not include a list of codes, other than **10100101** meaning a carbon-monoxide alarm.
-We should see that code **0xA5** But, we do not know if the implementations matc 100%. 
-also we can see there are bits changing.  We will try to corrilate the changes to real world inputs.
+We should see that code **0xA5** But, we do not know if the implementations matc 100%. Also we can see there are some bits changing.  
+
+We will try to corrilate the changes to real world inputs.
   * Manual Test Button
   * Thermistor Test
   * Low Battery Simulation 
   * CO Test
-  * 
+  * ?Anything else?
 
+Also, to help correlate the specifec packets to events, I decided to tap into the communications for the user of the device, the LED and the ALARM bits.  With this information, we can see what the last state the device shows, it sticks until the next status changes.  Typically the LED blinks without an ALERT, this is the status you may catch if you are looking a the device, it happens about once a minute.  So what that also tells us - from the hardware described earlier -  is the only time the Thermstor can be read, is when the LED is also activated ( active LOW) so we know that immeadiately after that, we may see some bits change, those may well be a temperature word! 
 
-### Notes and Comments 
+## Notes and Comments 
 * **Note (1): Measured 3v3 Power Rail (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
 * **Note (2): Measured +5V Rail (`VO`):** Boosted to **4.54 V** via the chip's  DC-to-DC step-up circuit.
 * **Note (3): Measured Op Amp Stage 2 Baseline Bias (Pin 5):** Biased to at factory to a baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
 * 
-## (4) Corrected Schematic Values (3.3V System Target)
+### Note (4) Corrected Schematic Values (3.3V System Target)
 The color code on these two resistors were hard to read, and typical of precision restors, they had "extra" stripes. To manually replicate the verified *in-situ* baseline voltage of ~0.298V without utilizing non-standard values, substitute the theoretical divider values with standard 1% components:
 
 * **  Top Divider Resistor (R17):** Swap out for a standard **487kΩ** (or **470kΩ** as a close alternative).
 * **Bottom Divider Resistor (R16):** Swap out for a standard **47kΩ**.
 * **Resulting Baseline:** Yields an explicit stable bias of **0.298V**, mirroring my production device's profile perfectly.
 * Although this matches my unit, as long as the ADC Vref is set properly the standard ratio should be OK.
-### (5) Anti-Polarization Shunt Circuit
+* 
+### Note5 (5) Anti-Polarization Shunt Circuit
 * **Component:** `100kΩ` Resistor (R15) connected directly across the Working Electrode (**WE**) and Counter Electrode (**CE**).
 * **Function:** Electrochemical cells naturally behave like tiny batteries and will drift or suffer permanent degradation if they hold an electrical charge while unpowered. This resistor acts as a safe drain path when the system is off, maintaining a strict 0V potential between the electrodes.
 * **Bench-Testing Note:** I got lazy and tried to measure this resistor in-circuit using a standard Multimeter resistance setting. But the active chemistry of the TGS5042 injects a residual voltage into the traces, which skews the meter's test current and produces false, fluctuating resistance readings i got 600K which was a wierd value for a shunt.
@@ -339,4 +352,5 @@ https://www.figarosensor.com/product/docs/tgs5xxx_application%20note(en)_rev01.p
 - US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
   https://patents.google.com/patent/US6791453B1/en
 
+- gist/darconeous @ github — Interconnected Hazardous Condition Detectors
 https://gist.github.com/darconeous/b55d9d1c01ac67f356d86f82a56a6271
