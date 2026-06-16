@@ -310,6 +310,9 @@ The color code on these two resistors were hard to read, and typical of precisio
 
 - Figaro TGS5042 CO Sensor Datasheet
   https://www.figarosensor.com/product/docs/TGS%205042%20%281120%29.pdf
+  
+- Figaro APPLICATION NOTES FOR TGS5042
+https://www.figarosensor.com/product/docs/tgs5xxx_application%20note(en)_rev01.pdf
 
 - Microchip MCP6021 Op‑Amp Datasheet
   https://ww1.microchip.com/downloads/en/DeviceDoc/20001685E.pdf
