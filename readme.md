@@ -166,10 +166,10 @@ Here is what i came up with. I  may update it if there are any other cool bits o
 
 ~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE** Notes: (1) (2) (3)
 ### Post-Apocalyptic? 
-Hopefully, the schematic may be usefull to someone - **maybe as part of your next post-apocalyptic tricorder found  device project?**
+Hopefully, the schematic may be usefull to someone - **maybe as part of your next post-apocalyptic tricorder found junk device project?**
 
 ## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the **Figaro TGS5042** sensor (schematic U4, board SEN 1) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it.  
+Most of the circuits have been explained in the previous secctions.  The reading of the **Figaro TGS5042** sensor (schematic U4, board SEN 1) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it. There following are all explained in more detail in the references- I will try to give a quick explanation here.
 
 ## 1. Sensor Current to Output Voltage ($V_{out}$)
 The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.  
@@ -204,6 +204,7 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 <p align="center">
   <img src="resources/TIA.png" width="500" alt="CO400 Schematic">
 </p>
+The numbers in this drawing refer to the paragraphs below. 
 
 ### 1. Anti-Polarization Shunt Circuit
 
@@ -237,7 +238,8 @@ OK with that out of the way, lets dig into some of these circuits. The TGS5042 c
 * Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, & 7.  The circuit is configured as a buffer with the (-) input tied to the output pin. A voltage Divider consisting of (R17) to $V_{CC}$ and (R16) to GND.
 * Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
 * Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point above the ground level.
-   * Note: Electrochemical sensors can sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. Elevating the "zero gas" signal above 0V prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately.
+
+Why? Electrochemical sensors may sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. By adding the small offset voltage moves the "zero gas" signal a little above 0V which prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately. 
 
 ### 6. ADC / Buffer Validation Circuit 2 (RA1/AN1)
 
