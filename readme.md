@@ -250,7 +250,17 @@ The numbers in this drawing refer to the paragraphs below.
    
 * Based on the transient response of the 10kΩ injection resistor and the 100nF filter capacitor, a single initialization pulse lasting exactly 560 microseconds (0.56 ms) will perfectly pre-charge the analog filter node to its steady-state clean-air operating baseline, eliminating the slow hardware startup lag.  
 
-## Testing Methods, Notes & Results 
+## Data Stream at (TP1)
+The "serial" data is very interesting.  It could give all the insight to the workings of this little device, without the need to swap out the PIC Chip.  I will cover that a little more later.  The first investigations started with the oscilloscope.  I captured the timing of these "frames" and verified that there is some data on them. 
+
+<p align="center">
+  <img src="resources/scope_traces/Packets.png" width="500" alt="Packets!">
+</p>
+They are 3v3 Arduino inputs safe and there are several differnt timings.  The most common spacing ie the ~2.5 Seconds. We may discuss the different timngs in detail  later, But the short story is they happen when the Status LED blinks.  
+
+
+
+
 
 Including the *Serial data?* I found :  
 
@@ -266,7 +276,7 @@ Including the *Serial data?* I found :
     17:16:37.373 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
     17:16:42.551 -> Δt=5166 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
     17:16:47.284 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
-5
+
 It is definately PWM data. We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...** 
 The patent referenced below does not include a list of codes, other than **10100101** meaning a carbon-monoxide alarm.
 We should see that code **0xA5** But, we do not know if the implementations matc 100%. 
