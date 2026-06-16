@@ -316,12 +316,15 @@ The color code on these two resistors were hard to read, and typical of precisio
 - Figaro APPLICATION NOTES FOR TGS5042
 https://www.figarosensor.com/product/docs/tgs5xxx_application%20note(en)_rev01.pdf
 
+- US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
 - Microchip MCP6021 Op‑Amp Datasheet
   https://ww1.microchip.com/downloads/en/DeviceDoc/20001685E.pdf
 
 - PIC16F688 Datasheet (microcontroller used in CO400)
-  https://ww1.microchip.com/downloads/en/DeviceDoc/41203F.pdf
+
+   https://ww1.microchip.com/downloads/en/DeviceDoc/41203F.pdf
 
 - US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
   https://patents.google.com/patent/US6791453B1/en
 
+https://gist.github.com/darconeous/b55d9d1c01ac67f356d86f82a56a6271
