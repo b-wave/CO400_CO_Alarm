@@ -239,7 +239,7 @@ The numbers in this drawing refer to the paragraphs below.
 * Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
 * Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point above the ground level.
 
-Why? Electrochemical sensors may sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. By adding the small offset voltage moves the "zero gas" signal a little above 0V which prevents the output signal from clipping against the ground rail, allowing the ADC to capture both positive gas spikes and negative sensor drift accurately. 
+- Why? Electrochemical sensors may sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. By adding the small offset voltage moves the "zero gas" signal a little above 0V which prevents the output signal from clipping against the ground rail, allowing the ADC to capture the full range even with any negative sensor drift accurately. 
 
 ### 6. ADC / Buffer Validation Circuit 2 (RA1/AN1)
 
@@ -266,12 +266,14 @@ Including the *Serial data?* I found :
     17:16:37.373 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
     17:16:42.551 -> Δt=5166 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
     17:16:47.284 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
-
-It is definately PWM data. We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...**
+5
+It is definately PWM data. We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...** 
+The patent referenced below does not include a list of codes, other than **10100101** meaning a carbon-monoxide alarm.
+We should see that code **0xA5** But, we do not know if the implementations matc 100%. 
 also we can see there are bits changing.  We will try to corrilate the changes to real world inputs.
   * Manual Test Button
   * Thermistor Test
-  * Low Battery Simulation
+  * Low Battery Simulation 
   * CO Test
   * 
 
