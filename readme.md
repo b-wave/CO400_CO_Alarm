@@ -248,8 +248,15 @@ The numbers in this drawing refer to the paragraphs below.
 1. Buffer Diagnostics: If driven by a digital pin, the MCU can momentarily inject a test voltage into the buffer input. Observing the corresponding shift on the main ADC trace confirms that the second stage, the PCB trace, and the MCU's internal ADC hardware are completely intact.
 2. Fast Stabilization Assist: Upon cold-booting, electrochemical sensors require time to settle. The MCU can temporarily configure this pin as an active output to rapidly charge the filter node to its steady-state voltage, sharply reducing the initial sensor warm-up time before flipping the pin back to a passive input state.
    
-* Based on the transient response of the 10kΩ injection resistor and the 100nF filter capacitor, a single initialization pulse lasting exactly 560 microseconds (0.56 ms) will perfectly pre-charge the analog filter node to its steady-state clean-air operating baseline, eliminating the slow hardware startup lag.  
+* Based on the transient response of the 10kΩ injection resistor and the 100nF filter capacitor, a single initialization pulse lasting exactly 560 microseconds (0.56 ms) will perfectly pre-charge the analog filter node to its steady-state clean-air operating baseline, eliminating the slow hardware startup lag.
 
+## Analog Waveforms 
+Now most of the operation should be evident in the waveforms. Looking at the output of the analog circuits we can see this board in operation. 
+<p align="center">
+  <img src="resources/scope_traces/SDS00004.jpg" width="500" alt="Packets!">
+</p>
+
+resources/scope_traces/SDS00004.jpg
 ## Data Stream at (TP1)
 The "serial" data is very interesting.  It could give all the insight to the workings of this little device, without the need to swap out the PIC Chip.  I will cover that a little more later.  The first investigations started with the oscilloscope.  I captured the timing of these "frames" and verified that there is some data on them. 
 
