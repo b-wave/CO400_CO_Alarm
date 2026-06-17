@@ -253,24 +253,34 @@ The numbers in this drawing refer to the paragraphs below.
 ## Analog Waveforms 
 Now most of the operation should be evident in the waveforms. Looking at the output of the analog circuits we can see this board in operation. 
 <p align="center">
-  <img src="resources/scope_traces/SDS00004.jpg" width="500" alt="Packets!">
+  <img src="resources/scope_traces/SDS00004.jpg" width="500" alt="Sensor U3 Output">
 </p>
 
 ### Under Control 
 Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
 
 ### Old But Looking Good 
-The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear air level.  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is bad, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all. So this 2009 vintage CO sensor still can sense. 
+The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear "air level".  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is loss in sensitivity or indications of the electrolyte drying out, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all. So this 2009 vintage CO sensor still can sense. 
+
 <p align="center">
-  <img src="resources/scope_traces/SDS00005.jpg" width="500" alt="Packets!">
+  <img src="resources/scope_traces/SDS00003.jpg" width="500" alt="Sensor Test!">
 </p>
-Here is a closer view of the trace showing the Figaro TGS5042 sensor test and recovery part of the waveform. 
+
+Here is a closer view of the trace showing the Figaro TGS5042 sensor test and recovery part of the waveform.  The 12.9 second recovery time is shown here measured between the cursors.  Everything hallens slowly on this device, in terms of seconds. THose ramp up slopes are probabily caused by the feedback capacitor in the TIA charging up. 
+
+
+<p align="center">
+  <img src="resources/scope_traces/SDS00002.jpg" width="500" alt="Sensor and Thermistor">
+</p>
+
+This trace shows both the sensor and the thermistor voltage (lower trace).  The value of he thermistor voltage is only valid when the LED is on so almost a minute between each sample. And this pretty much verifies that the themistor readings take place during these slightly longer dips. Everything is done in the 2.4 Second intervals.  As we will show in the next section the Data packets also align with this timeing cadence - they may be the driver of it in fact. 
+
 
 ## Data Stream at (TP1)
 The "serial" data is very interesting.  It could give all the insight to the workings of this little device, without the need to swap out the PIC Chip.  I will cover that a little more later.  The first investigations started with the oscilloscope.  I captured the timing of these "frames" and verified that there is some data on them. 
 
 <p align="center">
-  <img src="resources/scope_traces/Packets.png" width="500" alt="Packets!">
+  <img src="resources/scope_traces/PacketSpacing.png" width="500" alt="Packets!">
 </p>
 
 * Packets! They are 3v3 Arduino inputs safe and there are several differnt timings.  The most common spacing ie the ~2.5 Seconds. We may discuss the different timngs in detail  later, But the short story is they happen when the Status LED blinks.  
@@ -287,32 +297,30 @@ The "serial" data is very interesting.  It could give all the insight to the wor
 
 * The Preamble.  So when i saw the beginning of the packets ( looking for start bits) i noticed this strange pattern. too short to be a byte or nibbe of data, the marking pulses wer very short compaired to the rest of the packet ( three of them ) and one long gap.  Was this deliberate or an artifact of eth CPU coming out of its slunmber?  I did a search and uncoverd the Patent that covers this protocol, they are called "rattle bits" and fits this implementation fairly closely.
 
-So with all this info it was time to spec out an Arduino sketch and tap into this data at TP1. ( CO400 RAW PWM FRAME LOGGER v0.4.1 )  I hope to generate a table of what these frames mean.  Here is the first *Serial data?* I found :  
+So with all this info it was time to spec out an Arduino sketch and tap into this data at TP1. ( CO400 RAW PWM FRAME LOGGER v0.4.4 )  I hope to generate a table of what these frames mean.  Here is a sample the first *Serial data?* I found :  
 
-    17:16:11.039 -> ==============================================
-    17:16:11.087 ->    CO400 RAW PWM FRAME LOGGER v0.4.1 ACTIVE
-    17:16:11.087 -> ==============================================
-    17:16:13.576 -> 
-    17:16:13.576 -> Δt=2541 ms  Bits=60  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0xA0 0x04 | CHK?=0x04
-    17:16:18.319 -> Δt=4762 ms  Bits=59  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0xA0 0x04 | CHK?=0x04
-    17:16:23.112 -> Δt=4760 ms  Bits=60  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0xA0 0x04 | CHK?=0x04
-    17:16:27.856 -> Δt=4757 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
-    17:16:32.612 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
-    17:16:37.373 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
-    17:16:42.551 -> Δt=5166 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
-    17:16:47.284 -> Δt=4756 ms  Bits=61  FRAME: 0x55 0xAA 0x4A 0x15 0x2A 0x41 0x09 | CHK?=0x09
+    ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
+    ?t=4776 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
+    ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
+    ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
+    ?t=4774 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
+    ?t=4772 ms  Bits=66  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
+    ?t=4772 ms  Bits=66  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
+    ?t=4772 ms  Bits=66  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
+    BURST led=1 horn=0
 
-It is definately PWM data.  The packet decode is very consistant 60 bits. I am not able to see anything that looks like a checksum.  We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...** 
+* **Issues and Answers.**  Three things to point out.  First, the timing **4777 ms** is about twice what we saw on the scope, so it is skipping every other packet.  Second, the Number of bits is around  - 64 bits for 8 Bytes as expected - But if you run this sketch with the bits in the other sense, they almost always match 64-bits.  Third, looking at the last two bytes ,they seem to track the sensor test and recovery. I am pretty certain that these two bytes are the CO level (0x94 is "clear air" level).  I will put some logs in the resources/scope traces file if you are interested. 
 
-The patent referenced below does not include a list of codes, other than **10100101** meaning a carbon-monoxide alarm.
-We should see that code **0xA5** But, we do not know if the implementations matc 100%. Also we can see there are some bits changing.  
+* **It is PWM data.**  The packet decode is very consistant so it is not random noise, it looks like we nearly have a perfect decoder probbily 80 - 90%. ** *But like everything else, 80% of the work takes 20% of of the time but it take the other 80% of the time to make it work correctly!* I am also not able to see anything that looks like a checksum.  We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...**  The addiiton of the two status bits helps in looking at these logs and correlates well with ethe expected data. But, it is stil a prototyoe 0.4.4 so my 4th attempt with enhancements! 
 
-We will try to corrilate the changes to real world inputs.
+* **Never Meant to be Seen.**  The patent referenced below does not include a list of codes, other than **10100101** meaning a carbon-monoxide alarm. We should see that code **0xA5** But, we do not as a device ID in these packets. But maybe when an alarm happens?  We also don't know if the implementations match the patent 100% - Or this is test data for the factory never meant to be shared on the sensor buss outlined there. 
+
+* **Suggested Tests** We will try to corrilate the changes to real world inputs.
   * Manual Test Button
   * Thermistor Test
   * Low Battery Simulation 
   * CO Test
-  * ?Anything else?
+  * *Anything else?*
 
 Also, to help correlate the specifec packets to events, I decided to tap into the communications for the user of the device, the LED and the ALARM bits.  With this information, we can see what the last state the device shows, it sticks until the next status changes.  Typically the LED blinks without an ALERT, this is the status you may catch if you are looking a the device, it happens about once a minute.  So what that also tells us - from the hardware described earlier -  is the only time the Thermstor can be read, is when the LED is also activated ( active LOW) so we know that immeadiately after that, we may see some bits change, those may well be a temperature word! 
 
