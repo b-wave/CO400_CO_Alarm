@@ -256,7 +256,16 @@ Now most of the operation should be evident in the waveforms. Looking at the out
   <img src="resources/scope_traces/SDS00004.jpg" width="500" alt="Packets!">
 </p>
 
-resources/scope_traces/SDS00004.jpg
+### Under Control 
+Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
+
+### Old But Looking Good 
+The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear air level.  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is bad, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all. So this 2009 vintage CO sensor still can sense. 
+<p align="center">
+  <img src="resources/scope_traces/SDS00005.jpg" width="500" alt="Packets!">
+</p>
+Here is a closer view of the trace showing the Figaro TGS5042 sensor test and recovery part of the waveform. 
+
 ## Data Stream at (TP1)
 The "serial" data is very interesting.  It could give all the insight to the workings of this little device, without the need to swap out the PIC Chip.  I will cover that a little more later.  The first investigations started with the oscilloscope.  I captured the timing of these "frames" and verified that there is some data on them. 
 
