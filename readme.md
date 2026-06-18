@@ -473,3 +473,9 @@ Even in retirement, this little alarm still teaches lessons about low‑power de
 - Oscilloscope captures from SDS1104X‑E  
 - Arduino “CO400 RAW PWM FRAME LOGGER v0.4.4” (custom tool)
 
+
+## License
+
+- **Code** is licensed under the MIT License (see `LICENSE`)
+- **Documentation** is licensed under CC‑BY‑4.0 (see `LICENSE-docs`)
+
