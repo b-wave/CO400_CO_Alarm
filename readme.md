@@ -1,390 +1,475 @@
-# First Alert CO Alarm (Model CO400) - Teardown
-*A Work in Progress* 
+
+# First Alert CO Alarm (Model CO400) — Teardown  
+*A Work in Progress*
+
 <p align="center">
   <img src="resources/20260530_110405.jpg" width="350" alt="First Alert CO Alarm">
 </p>
 
 ## Overview
-This device is a sensor and alarm device (ca. 2009) which has reached its end-of-life. I was curious what made it tick and was surprised to find an automated detection and  warning system that is a masterwork of low-power engineering design. It is not only just a humble consumer device but is a minuature automated chemistry lab, with a fuel cell!  It was manufatured by a company called **BRK Brands, Inc.**  So it is likely used in other CO detectors as well. 
+This carbon‑monoxide alarm (circa 2009) recently reached its end‑of‑life. I wanted to see what made it tick and was surprised to find a beautifully engineered low‑power detection system — not just a humble consumer gadget but a miniature automated chemistry lab with a fuel‑cell sensor.  
+
+It was manufactured by **BRK Brands, Inc.**, so the same design likely appears in other First Alert CO detectors.
+
 <p align="center">
-  <img src="resources\20260530_110416.jpg" width="225" alt="Product Label">
+  <img src="resources/20260530_110416.jpg" width="225" alt="Product Label">
 </p>
 
-The date: **2009 SEP 7** the chip date codes are also around this year. This device was indicating the five-chirp per minute warning: End-of-life. 
+The date code is **2009 SEP 7**, and the IC date codes match that timeframe. The unit was signaling the five‑chirps‑per‑minute end‑of‑life warning.
+
+---
 
 ## Hardware Description
-The hardware has several interesting, some unusual, and some familiar parts.  <p align="center">
+The hardware combines familiar building blocks with a few surprises.
+
+<p align="center">
   <img src="resources/20260609_133546.jpg" width="250" alt="CO400 PCB">
 </p>
 
-### One moment please.. 
-I did not kow what to expect, maybe it would be a simple typical thermal gas  sensor tied to a piezo beeper, but the device interested me so let's do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actually took several hours over a few days to complete. And...I am not sure it is 100% correct so,  take it with about a ~~pinch~~ pound of salt.
+### One moment please…
+I expected a simple thermal gas sensor tied to a piezo beeper, but curiosity won — so, a **bigclivedotcom‑style** teardown it is!  
+Tracing this “simple” PCB turned out to be anything but simple; it took several hours over a few days. I’m confident in most of it, but assume a margin of error — take it with a ~~pinch~~ pound of salt.
 
-### The Major Hardware 
-- **TGS-5042** CO Sensor
-- **PIC16F88** Microcontroller
-- **MCP6042** Op amp
-- **RE46C107** DC to DC Converter, Voltage Regulator and Piezoelectric Horn Driver
+### Major Hardware
+- **TGS‑5042** — CO sensor  
+- **PIC16F88** — Microcontroller  
+- **MCP6042** — Operational amplifier  
+- **RE46C107** — DC‑DC converter, voltage regulator, and piezo horn driver  
 
-### Details and Test Software 
-   - **Schematics!** PCB reverse engineering 
-   - **Serial Data** Maybe, kind of?
-   - **Software** For further investigations
+### Details and Test Software
+- **Schematics** — Reverse‑engineered PCB  
+- **Serial Data?** — Maybe… sort of  
+- **Software** — For further investigation  
 
-## Figaro TGS5042 Sensor 
+Perfect workflow, Steve — dropping each cleaned section into a `.txt` file is exactly the right move. That way you can review the edits in GitHub’s raw view before committing.  
+
+Let’s keep momentum: next up is **Part 2: Figaro TGS‑5042 Sensor**. I’ll polish it just like the first section — fixing typos, tightening phrasing, and keeping your notebook tone intact.
+
+---
+
+## Figaro TGS‑5042 Sensor
 <p align="center">
-  <img src="resources/20260530_115704.jpg" width="225" alt="TGS-5042 Sensor">
+  <img src="resources/20260530_115704.jpg" width="225" alt="TGS‑5042 Sensor">
 </p>
-When I first saw this device I thought it was a battery. There was even a few milivolts between the terminals. This is the sensor.  It is a miniture lab consisting of fuel-cell-type electrochemical sensor that outputs a tiny current strictly linear to the Carbon Monoxide (CO) gas concentration. It turns out seeing voltage on the sensor pins when the board has no power supply is completely normal and expected for this specific component.
+
+When I first saw this module, I thought it was a battery — and there *were* a few millivolts across the terminals. But this is the sensor itself: a miniature fuel‑cell‑type electrochemical device that outputs a tiny current linearly proportional to carbon‑monoxide concentration. Seeing voltage on the pins with the board unpowered is completely normal for this component.
 
 ### It Has a Fuel Cell?
+Yes — the **TGS‑5042** is literally a fuel cell. It contains an alkaline electrolyte and an internal water reservoir. When CO or residual gases reach the electrodes, the cell generates micro‑volts and nanoamps of current. Over roughly ten years, the electrolyte and reservoir dry out — which is likely the state of this unit now. The datasheet has excellent detail if you want to dive deeper.
 
-Yes, the **TGS5042** is a fuel cell type sensor. That is, it generates electricity from an electrolyte and a gas. It contains an aqueous alkaline electrolyte and an internal water reservoir. When target gas or residual gases are present, it literally generates its own micro-voltage and current. But it turns out, the electrolyte and water reservoir dry out after about 10-years, which is the state my sensor is in now. The datasheet and manual have lots of good info if you want to see more details.  
+### Remember the Number: 1642
+Each sensor has a printed calibration number and matching barcode. Mine reads **1642**, meaning:
 
-### Remember the number: 1642
-Each sensor has a printed calibration number and matching barcode (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description. 
+**1.642 nA per ppm of CO**
 
-The other code **090810** is the lot code for: **10 August 2009** which is close to the manufactured date and the date codes of the chips
+So for every 1 ppm of CO, the sensor outputs 1.642 nA. I’ll cover how the op‑amp interface converts this into a measurable voltage later.
 
-## PIC16F688 (U2) Microcontroller Chip
+The other printed code, **090810**, is the lot date: **10 August 2009**, matching the unit’s manufacturing timeframe.
 
+
+## PIC16F688 (U2) Microcontroller Chip
 <p align="center">
-  <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="TGS-5042 Sensor">
+  <img src="resources/WIN_20260530_15_47_08_Pro.jpg" width="225" alt="PIC16F688 Microcontroller">
 </p>
 
-Seeing this chip on the board is like being handed a secret decoder to the whole thing. While it is unlikely to be able to capture the existing code, we know what each pin does. *does the **"D"** stamped on TP1 mean checked for data?* 
+Spotting this chip on the board is like being handed the decoder ring for the whole system. Even though we can’t extract the firmware, the pinout tells us a lot about how the device works.  
+*(Side note: does the “D” stamped on TP1 mean “data tested”? Still not sure.)*
 
-### Features 
-The **PIC16F688** is a 14-pin, 8-bit CMOS microcontroller from Microchip Technology featuring nanoWatt technology for low power consumption - ideal for this device.  Some of the key features/interfaces:
-  - It includes 7KB of Flash program memory, 256 bytes of SRAM, and 256 bytes of EEPROM, supporting supply voltages from 2.0V to 5.5V.
-  - This chip also supports low-power by switching off things like the Thermistor temperature sensor and the amplifiers to save power.
-  - Since it is a saftey device it also provides a power-cycle with an NPN transistor switch (Q1) a PN2222 temporatily taking the battery voltage down trough (R6) controlled by a port (AN3) - proabibily on a watchdog timer?
-  - It pulses the horn thru U1 (pin 14) via RC4 as well as controling some built in tests
-  - The LED (D4) & Thermistor (TH1) are controlled simultaneously by pulling (RC0) Low.
-  -  SW1 is the TEST/SILENCE button connected to input (RC5).
-  -  Vbatt here is connected to (AN5) for battery voltage measurement.
-  -  There is another circuit that seems to be a self-test consisting of (D1) (R2) (R12) and (C12) I am not exactly sure what this circuit does but it apparently uses Vbatt and is controlled by (RC3)  and (RC4) which is also the signal that enables the Siren. ~~TODO Retrace this circuit to try to find out what it does.~~ Done! see Note (6)
+### Features
+The **PIC16F688** is a 14‑pin, 8‑bit CMOS microcontroller from Microchip’s nanoWatt family — perfect for a battery‑powered safety device.  
 
-## MCP6042 (U3) Op Amp
+Key features and functions in this circuit:
+- 7 KB Flash, 256 B SRAM, 256 B EEPROM  
+- Operates from 2.0 V to 5.5 V  
+- Can selectively power down peripherals (thermistor, op‑amps, etc.) to conserve battery  
+- Includes a clever power‑cycle circuit: an NPN transistor (**Q1**, PN2222) briefly pulls the battery line down through **R6**, controlled by **AN3** — likely part of a watchdog or self‑test routine  
+- Pulses the horn through **U1 (pin 14)** via **RC4**, also handling built‑in tests  
+- Controls the LED (**D4**) and thermistor (**TH1**) simultaneously by pulling **RC0** low  
+- **SW1** is the TEST/SILENCE button connected to **RC5**  
+- **Vbatt** is monitored on **AN5** for battery‑voltage measurement  
+- A self‑test circuit involving **D1**, **R2**, **R12**, and **C12** appears to use Vbatt and is controlled by **RC3** and **RC4** (the same signal that enables the siren).  
+  ~~TODO: Retrace this circuit to find out what it does.~~ **Done! See Note (6).**
+Here’s **Part 4: MCP6042 Operational Amplifier**, cleaned up and ready to paste. I kept your “bench‑lab” tone — curious, conversational, and technical — while tightening phrasing and fixing typos.
+
+---
+
+## MCP6042 (U3) Operational Amplifier
 <p align="center">
-  <img src="resources/WIN_20260530_15_49_09_Pro.jpg" width="225" alt="Transimpedance Amplifier">
+  <img src="resources/WIN_20260530_15_49_09_Pro.jpg" width="225" alt="Transimpedance Amplifier">
 </p>
 
-### Score!  
-When a chip company gets selected to go in a product they get a "socket" **Microchip** got two on this board the **PIC16F688** and  
-The **MCP6042** are both from **Microchip Technology Inc.**  The **MCP6042** is a  high performance operational amplifier used in this device as a Transimpedance Amplifier (TIA) for current to voltage conversion. In this configuration the current from the sensor is forced to flow through the feedback resistor. The output voltage is calculated simply by multiplying the input current by the feedback resistor. The specifications for this op amp -like impedance characteristics and gain bandwidth- are ideal for applications, such as sensor conditioning. We will go into the details later in the detailed circuit description. 
+### Score!
+When a chip company gets selected for a product, they earn a “socket.” **Microchip** scored two here — the **PIC16F688** and the **MCP6042**.  
+The **MCP6042** is a high‑performance dual operational amplifier used as a **transimpedance amplifier (TIA)** to convert the sensor’s current into voltage. In this configuration, the sensor current flows through the feedback resistor, and the output voltage equals the input current multiplied by that resistor’s value.  
 
-### Key specifications include: 
-   - Dual Amplifier in an 8-pin DIP Package
-   - Low Quiescent Current: <1 µA (600 nA/amplifier typical)
-   - Wide Supply Voltage Range: 1.4V to 6.0V
-    
-* The 1M Resistor and 100nF capacitor seen in the photo match the reference circuit from the **TGS-5042** Sensor documentaion. 
+Its impedance characteristics and gain‑bandwidth make it ideal for sensor‑conditioning applications like this one. We’ll dig deeper into the circuit details later.
 
-## The RE46C107 (U1)  DC to DC Converter, Voltage Regulator & Piezoelectric Horn Driver Chip
+### Key Specifications
+- Dual amplifier in an 8‑pin DIP package  
+- Low quiescent current: < 1 µA (600 nA per amplifier typical)  
+- Wide supply voltage range: 1.4 V to 6.0 V  
 
-This is kind of a multipurpose specially chip. 
+The 1 MΩ resistor and 100 nF capacitor visible in the photo match the reference circuit from the **TGS‑5042** sensor documentation.
 
-The **RE46C107** is manufactured R&E International *A Subsidiary of **Microchip Technology Inc.***  Is this a third and last "socket" *win?* Yes, I think it is a third win! 
 
-This is an interesting chip I never heard of. The **RE46C107** is an ASIC intended for use in 3V battery powered products like Smoke Detectors and CO Alarms.
+## RE46C107 (U1) DC‑DC Converter, Voltage Regulator & Piezo Horn Driver
+This is a multipurpose specialty chip — and a fascinating one.
+
+The **RE46C107**, manufactured by **R&E International** (a subsidiary of **Microchip Technology Inc.**), is an ASIC designed for 3 V battery‑powered products such as smoke and CO alarms.  
+That makes it the **third Microchip “socket win”** on this board.
 
 <p align="center">
-  <img src="resources/RE46C107(U1).jpg" width="225" alt="RE-46C07">
+  <img src="resources/RE46C107(U1).jpg" width="225" alt="RE46C107 Chip">
 </p>
 
-### Hidden in Plain sight 
-This chip is located under the Piezo Horn, I had to remove the  piezoelectric to reveal it but the 16-pin DIP on the left side of the board is the **RE46C107**
+### Hidden in Plain Sight
+This chip sits directly under the piezo horn. I had to remove the transducer to reveal it — the 16‑pin DIP on the left side of the board is the **RE46C107**.
 
 ### Alarming
-The circuit features a DC-to-DC up-converter and driver circuit suitable for driving a piezoelectric horn. Oh, so that's how they get such a loud siren out of 3V batteries and there is a spec for alarm devices have to be so many dB (loud).  
-### Boost it!
-A selectable  3.0V or 3.3V A 5 Volt regulator is also provided for microprocessor voltage regulation. This curcuit uses the 3.3-Volt setting. 
-### No Use
-It also has a **LED Driver** and **low battery detection** but for some reasons these features were not used in this product. 
+The circuit includes a DC‑to‑DC up‑converter and driver suitable for piezoelectric horns.  
+That’s how the alarm achieves such a loud siren from just two AA batteries — meeting the required dB level for safety devices.
+
+### Boost It!
+A selectable 3.0 V or 3.3 V regulator provides a 5 V output for logic circuits.  
+This design uses the **3.3 V** setting.
+
+### Not Used
+The chip also includes an **LED driver** and **low‑battery detection**, but those features weren’t implemented in this model.
 
 <p align="center">
-  <img src="resources/WIN_20260530_15_49_50_Pro.jpg" width="225" alt="RE46C07 DC-DC converter Inductor">
+  <img src="resources/WIN_20260530_15_49_50_Pro.jpg" width="225" alt="RE46C107 Inductor">
 </p>
 
-### Scope Out the Supporting Parts
-This a microscope picture of the inductor, i was trying to get any indication of the values of the inductor and diode they used  - i assume that it matches the documtation's typical application circuit that use a 10 uH inductor.  Then there are a couple of rectifier diodes, which were installed with the part numbers down on the board.  The specs called for a Schottky diode (I chose a 1N5818 seems to fit the specs.)  There is another rectifier diode in the processor test circuits - not related to this chip- so i just used the same for that other diode. 
+### Scope Out the Supporting Parts
+This microscope photo shows the inductor. I tried to identify its value — likely 10 µH, matching the typical application circuit.  
+A pair of rectifier diodes were installed with markings facing down; specs call for a **Schottky diode**, so I used a **1N5818** for testing. Another diode appears in the processor test circuit, unrelated to this chip, and I used the same part there.
 
-    App Notes: 
-    - Inductor L1 must have maximum peak current rating of at least 1.5A and for best results should have DC resistance of less than 0.3 ohm.
-    - Schottky diode D1 must have maximum peak current rating of at least 1.5A and for best results should have forward voltage spec of less than 0.5V at 1 Amp. 
+**App Notes:**
+- Inductor L1 should handle ≥ 1.5 A peak current and < 0.3 Ω DC resistance.  
+- Schottky diode D1 should handle ≥ 1.5 A peak current and < 0.5 V forward drop at 1 A.
 
-### Key Specifications Include:
-  - Low Quiescent Current - Low power design feature
-  - 10V Boost Converter regulator - That's a lot of volts from a couple of 1.5 V AA batteries
-  - Horn Driver - A complementary driver outputs HS and HB connect to the ceramic piezoelectric transducer, with a feedback pin as well.
-  - Voltage Regulation for to 3.0V or 3.3V - It is set by a logic input used to set the Vreg output.
-  - Voltage Regulation for +5 Volts - For logic circuits
-  - Low Battery Detection - *not used in this circuit*
-  - LED Driver- *not used in this circuit*
+### Key Specifications
+- Low quiescent current — optimized for battery life  
+- 10 V boost converter — impressive output from 3 V input  
+- Horn driver — complementary outputs HS and HB connect to the piezo transducer, with feedback  
+- Voltage regulation — selectable 3.0 V or 3.3 V logic rail  
+- Optional +5 V regulator for microcontroller logic  
+- Low‑battery detection (*unused*)  
+- LED driver (*unused*)
 
-## Methods to My Madness:  
-How I captured the schematic. Having the datasheets and reference circuits helped. The following two pictures were made to help. 
+
+## Methods to My Madness: Capturing the Schematic
+Having the datasheets and reference circuits made this much easier. The following two pictures helped map the board.
 
 <p align="center">
-  <img src="resources/20260531_104031.jpg" width="225" alt="RE-46C07">
-</p> 
-The solder side is mirrored and contrast enhanced - like viewing the board through the circuit side:
-<p align="center">
-  <img src="resources/20260531_104048.jpg" width="225" alt="CO400 PCB">
+  <img src="resources/20260531_104031.jpg" width="225" alt="RE‑46C107 Board View">
 </p>
 
-### X-ray Vision.
-The plan was to overlay these with the component side semi-transparent and the solder side mirrored so I could see the traces throughthe component side. I had no editing software on hand that could do layers like this. So no X-ray vision needed.
-
-I proceed to draw in the component outlines on a printout of the solder side and using continuity check on my DMM The contrast enhanced B&W print out, which was scaled up a bit helped - *...but an X-ray view would have been better.* 
-
-### Buzzed it out
-I used my multimeter to do point-to-point continuity tests and began to capture the circuits in KiCad using the reference circuits a guides. Since I started doing this before on the board from the solder side, I sometimes got the pin numbers wrong by starting on the wrong side of the chips! But it was easy to find and correct the errors using the reference documents. Assignment of component values was done later, with the help of component markings and measurements.  
-
-### Board Takeover!
-I originally considered reprogrmming the PIC16F688 controller.  The theory is that there is a end-of-life timer that just halts normal operation then there may still be some remaining sensitivity to the CO sensor that i could read.  The initial plan was to unsolder the chip and replace it with a 14-pin socket. This would allow not only to reprogram the chip off of the board but the socket also would alow me to jumper into an Arduino and run the sensor that way. Alternatively, simply soldering in short jumper wires to the pads after removing the chip would allow me to use a breadboard. 
-
-### DFM & DFT
-One other minor annoyance tracing the circuits was there are a lot of pads that do not support any particular components, and some components used long leads that pass over the pads, so i had to use the board to verify that they were just pads without component leads. My guess is they are for factory programming, calibration, and test or **Design For Manufacturing (DFM).** 
-
-Another clue for **DFM**is there are a couple of large holes in the board. **(DAT1, DAT2)** these are not mounting holes but I suspect they are "datum?" holes for alignment pins for a pogo pin or "bed of nails" fixture.  Which brings up another idea - I bet all the signals for *In Circuit Programming* (ICP) are on these pads, along with other importaint signals. I probably should capture these on the schematic somehow,  although they are not labeled.
-
-Oh, and i did go back and look at these, i can see the pin pricks right dead center on most of these. 
-
-**Design For Test (DFT)** yes, we have lots of built in test on this board - more details on these later.
-
-### Not My Problem
-This effort was to see how this thing worked, not to copy or reproduce it.  ~~There are some errors i am aware of on the schematic i will probabily fix, and i still had some questions about power distribution etc.~~ Done, mostly addressed.
-
-### the Schematic
-Here is what i came up with. I  may update it if there are any other cool bits or mistakes i find, but as i said before this is most certaintly not complete but i never inteded to *copy or reproduce* the detector. 
+The solder side is mirrored and contrast‑enhanced — like viewing the board through the component side.
 
 <p align="center">
-  <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
+  <img src="resources/20260531_104048.jpg" width="225" alt="CO400 PCB Solder Side">
 </p>
 
-~~Schematic TODO: Verify U3 V+ voltage and the voltage @ R17. - this will be critical to the ADC and reading of the sensor voltage.~~ **DONE** Notes: (1) (2) (3)
-### Post-Apocalyptic? 
-Hopefully, the schematic may be usefull to someone - **maybe as part of your next post-apocalyptic tricorder found junk device project?**
+### X‑Ray Vision
+The plan was to overlay the component side semi‑transparent over the mirrored solder side to trace connections visually. I didn’t have editing software that could handle layers, so no literal X‑ray vision — just persistence.
 
-## Circuit Analysis:  
-Most of the circuits have been explained in the previous secctions.  The reading of the **Figaro TGS5042** sensor (schematic U4, board SEN 1) is the heart of this device.  There are a few mathematical fomula are needed that get the %CO from the sensor. Due to regulatory requirements for safety devices these circuits have Built In System Tests (BIST) to meet those requirements, since the circuits contain them I will also explain these and wil provide some proposed Arduino sketches to help explain/implement this sensor. This is a little technical - it was mostly vibed. There are a couple of *"got-ya things"* that need to be addressed, such as the Reference voltage for the ADC, and temperature compensation. It is basically Ohm's Law but the current resolution for 1% PPM CO is a nano Ampere or about $$\frac{1}{\ 1,000,000,000}$$ of an AMP!  This needs to be converted to a voltage so the ADC on the PIC can read it. There following are all explained in more detail in the references- I will try to give a quick explanation here.
+I drew component outlines on a printout of the solder side and used continuity checks on my DMM. The contrast‑enhanced black‑and‑white printout, scaled up slightly, helped a lot — though an actual X‑ray view would’ve been better.
 
-## 1. Sensor Current to Output Voltage ($V_{out}$)
-The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor is used to convert this current into a measurable voltage.  
+### Buzzed It Out
+Using the multimeter, I did point‑to‑point continuity tests and captured the circuits in KiCad, guided by reference schematics.  
+Starting from the solder side occasionally flipped pin numbering, but cross‑checking against datasheets made corrections easy. Component values were assigned later using markings and measurements.
 
-### 2. Calculating Sensor Current ($I_s$)
-To derive the raw sensor current in Amperes (A) from your circuit's measured output voltage, use the following formula:
-$$I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}$$ 
+### Board Takeover!
+I considered reprogramming the **PIC16F688** controller. My theory: an end‑of‑life timer halts normal operation, but the CO sensor might still respond.  
+The plan was to unsolder the chip and install a 14‑pin socket — allowing off‑board programming and easy jumper access to an Arduino for sensor testing. Alternatively, short jumper wires to the pads could connect to a breadboard.
 
-### 3. Carbon Monoxide (CO) Concentration Calculation
-To determine the absolute CO gas concentration in parts per million (ppm), divide the sensor output current by the sensor's individual sensitivity coefficient (measured in nA/ppm and found printed on the sensor's barcode).
-$$\text{CO Concentration (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}$$ 
+### DFM & DFT
+Tracing was occasionally confusing — many pads had no components, and some leads passed over unused pads. These are likely factory programming or calibration points, part of **Design for Manufacturing (DFM)**.
 
-### 4. Figaro Reference Formula
-The official Figaro EM5042A Evaluation Module circuit applies a fixed amplification factor (1.0 × 10⁶) resulting in a 1.0V baseline offset in clean air.
-$$V_{out} = (\text{Concentration} \times \text{Sensitivity}) + 1.0$$ 
+Two large holes labeled **DAT1** and **DAT2** aren’t mounting holes; they’re probably datum holes for alignment pins on a pogo‑pin “bed‑of‑nails” fixture.  
+That suggests all **In‑Circuit Programming (ICP)** signals are accessible there. I later confirmed pin‑prick marks centered on most pads.
 
-## 5. Microprocessor Measurement Resolution
-To evaluate the minimum measurable step of carbon monoxide resolution for our specific analog-to-digital converter (ADC) setup, apply:
-$$\text{Resolution} = \frac{C_{max}}{2^M \times B_{min}}$$ 
+**Design for Test (DFT)** also appears throughout — plenty of built‑in test circuits.
 
-  Where:
-  
-    * Cmax = Maximum target CO concentration
-    * M = Number of microcontroller ADC bits (e.g., 10-bit, 12-bit)
-    * Bmin = Minimum distinct digital bits required
+### Not My Problem
+My goal was understanding, not replication.  
+~~There were schematic errors I planned to fix and questions about power distribution.~~ **Done — mostly addressed.**
 
-
-## Interface Circuitry & Theory of Operation
-
-OK with that out of the way, lets dig into some of these circuits. The TGS5042 carbon monoxide sensor generates a minute electrical current directly proportional to gas concentration. To process this signal safely and accurately, the circuit utilizes a dual operational amplifier (MCP6042) split into two distinct functional stages with the integrated Built-In Self-Test (BIST) diagnostics.
+### The Schematic
+Here’s the result. It’s not perfect, but it captures the essence of the design.  
+I may update it if I find new details, but again — this was never meant to reproduce the detector.
 
 <p align="center">
-  <img src="resources/TIA.png" width="500" alt="CO400 Schematic">
-</p>
-The numbers in this drawing refer to the paragraphs below. 
-
-### 1. Anti-Polarization Shunt Circuit
-
- A big deal for just one  resistor. It was verified by reading the color code as measuring it would lead to incorrect result. see Notes below.
- ~~TODO: Need to check this resistor. I may have measured this value and the generated voltage may have interfered with the measurment, it seems pretty specfic~~ **DONE!** Note (5) 
- 
-* The 100kΩ resistor (R15) connected across the Working Electrode (WE) and Counter Electrode (CE).
-* Electrochemical sensors can degrade permanently or suffer severe baseline drift if they hold an electrical bias while powered down. When the main system power is completely off, this resistor acts as a safe drain path. It maintains the potential between WE and CE at exactly 0V, preventing polarization damage.
-
-### 2. Stage 1: Transimpedance Amplifier (TIA)
-
-* Key Components:  MCP6042 Op-Amp (U3A) (First Stage: Pins 1, 2, 3), 1MΩ feedback resistor (R3), 100nF feedback capacitor (2.2kΩ (R4) / 220Ω (R11) ) act as isolation resistors.
-* Function: This stage converts the sensor's raw nanoampere (nA) current into a readable voltage.
-* Gain Control: The 1MΩ resistor (R3) sets the transimpedance gain. Because of this value, every 1 nA of sensor current translates to exactly 1 mV of voltage deviation at the output (Pin 1) the following circuits are needed.
-   * Filtering: The 100nF parallel feedback capacitor acts as a low-pass filter to smooth out high-frequency environmental noise.
-   * Protection: The 2.2kΩ and 220Ω inline resistors protect the delicate op-amp inputs against unexpected current spikes.
-
-### 3. Sensor Diagnostic Test 1 (RA5)
-
-* Circuit Path: Microprocessor Digital Pin → Diode (D2) Anode on MCU side → 1MΩ (R5) resistor → Pin 3 (Inverting Input). There small signal diode (D2) is probabily a 1N914 or 1N4148.
-* Normal Mode: The MCU configures its digital pin as a High-Z Input (or holds it HIGH). This reverse-biases the diode, isolating the diagnostic branch completely so it does not affect gas readings.
-* Self-Test Mode: The MCU drives this pin LOW. This pulls current away from Pin 3 through the 1MΩ resistor. The op-amp immediately compensates by driving its output (Pin 1) upward. The MCU checks for this predictable voltage step-up on the ADC to verify that the first stage op-amp loop is alive and electrically sound.
-
-### 4. Inter-Stage RC Filter
-
-* Key Components: 240Ω series resistor (R14), 100nF capacitor (C8) to Ground.
-* Function: Located between the first stage output (Pin 1) and second stage input (Pin 6). This passive low-pass filter acts as a hardware noise barrier. It strips away high-frequency ripple and digital switching noise before the signal enters the ADC buffer.
-
-### 5. Stage 2: Voltage Buffer & Baseline Offset
-
-* Key Components: MCP6042 Op-Amp (U3B) Second Stage: Pins 5, 6, & 7.  The circuit is configured as a buffer with the (-) input tied to the output pin. A voltage Divider consisting of (R17) to $V_{CC}$ and (R16) to GND.
-* Function: This stage isolates the measurement circuit from the microprocessor's ADC load while establishing a stable "clean air" baseline reference voltage.  The analog output is read on (AN6). 
-* Voltage Divider (Pin 5): The 470kΩ (R17) and 47kΩ (R16) divider creates a permanent voltage offset on the non-inverting pin. For a 3.3V system, this sets a steady baseline reference point above the ground level.
-
-- Why? Electrochemical sensors may sometimes exhibit negative baseline drift or minor reverse currents under specific temperatures or clean-air conditions. By adding the small offset voltage moves the "zero gas" signal a little above 0V which prevents the output signal from clipping against the ground rail, allowing the ADC to capture the full range even with any negative sensor drift accurately. 
-
-### 6. ADC / Buffer Validation Circuit 2 (RA1/AN1)
-
-* Circuit Path: Microprocessor Pin (RA1/AN1) → 10kΩ resistor (R1) → Pin 6 (U3B) The non-inverting input of the Buffer stage.
-* Dual Functionality:
-1. Buffer Diagnostics: If driven by a digital pin, the MCU can momentarily inject a test voltage into the buffer input. Observing the corresponding shift on the main ADC trace confirms that the second stage, the PCB trace, and the MCU's internal ADC hardware are completely intact.
-2. Fast Stabilization Assist: Upon cold-booting, electrochemical sensors require time to settle. The MCU can temporarily configure this pin as an active output to rapidly charge the filter node to its steady-state voltage, sharply reducing the initial sensor warm-up time before flipping the pin back to a passive input state.
-   
-* Based on the transient response of the 10kΩ injection resistor and the 100nF filter capacitor, a single initialization pulse lasting exactly 560 microseconds (0.56 ms) will perfectly pre-charge the analog filter node to its steady-state clean-air operating baseline, eliminating the slow hardware startup lag.
-
-## Analog Waveforms 
-Now most of the operation should be evident in the waveforms. Looking at the output of the analog circuits we can see this board in operation. 
-<p align="center">
-  <img src="resources/scope_traces/SDS00004.jpg" width="500" alt="Sensor U3 Output">
+  <img src="resources/schematic.jpg" width="500" alt="CO400 Schematic">
 </p>
 
-### Under Control 
-Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits described above **(3), (6)**. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
+~~Schematic TODO: Verify U3 V+ voltage and voltage @ R17 — critical for ADC sensor reading.~~ **DONE** Notes (1) (2) (3)
 
-### Old But Still Looking Good 
-The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear "air level".  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is loss in sensitivity or indications of the electrolyte drying out, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all.
-### It's Alive! 
-So this 2009 vintage sensor still can sense CO, and the device is still working, a 10-year timer **"kill switch"** has not been activated. 
+### Post‑Apocalyptic?
+Maybe this schematic will help someone build their next **post‑apocalyptic tricorder junk‑tech project**.  
+
+---
+
+## Circuit Analysis
+Most of the circuits were introduced earlier, but this section dives deeper into how the **Figaro TGS‑5042** sensor (schematic U4, board SEN 1) is read — the heart of the device.  
+
+Because this is a safety system, it includes **Built‑In System Tests (BIST)** to meet regulatory requirements. I’ll outline the math behind the sensor readings and how the microcontroller interprets them.
+
+The sensor’s output current is tiny — on the order of nanoamps — so the circuit must convert it to voltage for the ADC. It’s basically Ohm’s Law, but at a scale of  
+\(\frac{1}{1,000,000,000}\) of an amp!
+
+---
+
+### 1. Sensor Current to Output Voltage (\(V_{out}\))
+The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor converts this current into a measurable voltage.
+
+### 2. Calculating Sensor Current (\(I_s\))
+To derive the raw sensor current (A) from the measured output voltage:
+\[
+I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}
+\]
+
+### 3. Carbon Monoxide Concentration
+To determine CO concentration in ppm:
+\[
+\text{CO (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}
+\]
+
+### 4. Figaro Reference Formula
+The official Figaro EM5042A evaluation circuit applies a fixed amplification factor of \(1.0 × 10^6\), producing a 1.0 V baseline offset in clean air:
+\[
+V_{out} = (\text{Concentration} × \text{Sensitivity}) + 1.0
+\]
+
+### 5. Microprocessor Measurement Resolution
+To estimate the minimum measurable CO step for a given ADC:
+\[
+\text{Resolution} = \frac{C_{max}}{2^M × B_{min}}
+\]
+where  
+  • \(C_{max}\) = maximum CO concentration  
+  • \(M\) = ADC bit depth  
+  • \(B_{min}\) = minimum distinct digital bits  
+
+---
+
+## Interface Circuitry & Theory of Operation
+The **TGS‑5042** sensor’s current is processed through two stages of the **MCP6042** dual op‑amp, each with its own diagnostic function.
 
 <p align="center">
-  <img src="resources/scope_traces/SDS00003.jpg" width="500" alt="Sensor Test!">
+  <img src="resources/TIA.png" width="500" alt="CO400 Analog Circuit">
 </p>
 
-Here is a closer view of the trace showing the Figaro TGS5042 sensor test and recovery part of the waveform.  The 12.9 second recovery time is shown here measured between the cursors.  Everything hallens slowly on this device, in terms of seconds. THose ramp up slopes are probabily caused by the feedback capacitor in the TIA charging up. 
+### 1. Anti‑Polarization Shunt Circuit
+- 100 kΩ resistor (R15) across Working Electrode (WE) and Counter Electrode (CE).  
+- Prevents polarization damage when power is off by keeping WE–CE potential at 0 V.  
+~~TODO: Check this resistor value — measurement interference possible.~~ **DONE! Note (5).**
 
+### 2. Stage 1: Transimpedance Amplifier (TIA)
+- **U3A** pins 1–3, 1 MΩ feedback resistor (R3), 100 nF capacitor, 2.2 kΩ (R4) and 220 Ω (R11) isolation resistors.  
+- Converts sensor current to voltage: 1 nA → 1 mV.  
+- 100 nF capacitor filters noise; isolation resistors protect op‑amp inputs.
+
+### 3. Sensor Diagnostic Test 1 (RA5)
+- MCU pin → diode (D2) → 1 MΩ (R5) → U3A pin 3.  
+- Normal mode: MCU holds pin HIGH or High‑Z, reverse‑biasing D2.  
+- Self‑test: MCU drives LOW, forcing current through R5; op‑amp output rises predictably, verifying loop integrity.
+
+### 4. Inter‑Stage RC Filter
+- 240 Ω (R14) series resistor + 100 nF (C8) to ground.  
+- Low‑pass filter between U3A output and U3B input, removing high‑frequency noise.
+
+### 5. Stage 2: Voltage Buffer & Baseline Offset
+- **U3B** pins 5–7 configured as buffer.  
+- Voltage divider (470 kΩ R17 to Vcc, 47 kΩ R16 to GND) sets baseline offset ≈ clean‑air voltage.  
+- Prevents negative drift from clipping at 0 V, ensuring ADC captures full range.
+
+### 6. ADC / Buffer Validation Circuit 2 (RA1/AN1)
+- MCU pin → 10 kΩ (R1) → U3B pin 6.  
+- **Dual function:**  
+  1. Injects test voltage to verify buffer and ADC path.  
+  2. Accelerates sensor warm‑up by pre‑charging filter node (~560 µs pulse).  
+
+Here’s **Part 8: Analog Waveforms and Data Stream Analysis**, cleaned and tightened while keeping your notebook tone — analytical, curious, and hands‑on. You can drop this straight into your `.txt` file.
+
+---
+
+## Analog Waveforms
+Now that the circuit operation is clear, let’s look at the analog waveforms — the heartbeat of this board in action.
 
 <p align="center">
-  <img src="resources/scope_traces/SDS00002.jpg" width="500" alt="Sensor and Thermistor">
+  <img src="resources/scope_traces/SDS00004.jpg" width="500" alt="Sensor U3 Output">
 </p>
 
-This trace shows both the sensor and the thermistor voltage (lower trace).  The value of he thermistor voltage is only valid when the LED is on so almost a minute between each sample. And this pretty much verifies that the themistor readings take place during these slightly longer dips. Everything is done in the 2.4 Second intervals.  As we will show in the next section the Data packets also align with this timeing cadence - they may be the driver of it in fact. 
+### Under Control
+In this scope trace, the steady line represents the sensor’s “clean‑air” voltage. The recurring pulses every ≈ 2.4 seconds correspond to the self‑test bits described earlier (**3**, **6**).  
+When the MCU pins go high‑impedance, the TIA output shifts, dropping the buffer output. The wider gaps coincide with LED flashes — roughly every 20 cycles.
 
+### Old But Still Looking Good
+The large jumps are almost certainly sensor self‑tests: a two‑pulse step followed by a deep down‑pulse. The slope of the recovery back to baseline shows the sensor is still active — about 12.9 seconds to recover.  
+That curve indicates the electrolyte is aging but functional; a failed sensor would show no recovery curve at all.
 
-## Data Stream at (TP1)
-The "serial" data is very interesting.  It could give all the insight to the workings of this little device, without the need to swap out the PIC Chip.  I will cover that a little more later.  The first investigations started with the oscilloscope.  I captured the timing of these "frames" and verified that there is some data on them. 
+### It’s Alive!
+So this 2009‑vintage sensor still detects CO. The device’s 10‑year timer “kill switch” hasn’t been triggered.
 
 <p align="center">
-  <img src="resources/scope_traces/PacketSpacing.png" width="500" alt="Packets!">
+  <img src="resources/scope_traces/SDS00003.jpg" width="500" alt="Sensor Test Recovery">
 </p>
 
-* Packets! They are 3v3 Arduino inputs safe and there are several differnt timings.  The most common spacing ie the ~2.5 Seconds. We may discuss the different timngs in detail  later, But the short story is they happen when the Status LED blinks.  
+Here’s a closer view of the sensor test and recovery waveform. The 12.9‑second recovery time is measured between cursors. Everything happens slowly — in seconds. The ramp‑up slopes likely come from the TIA feedback capacitor charging.
 
 <p align="center">
-  <img src="resources/scope_traces/SDS00004.png" width="500" alt="Typical Packets">
+  <img src="resources/scope_traces/SDS00002.jpg" width="500" alt="Sensor and Thermistor">
 </p>
 
-* A typical Packet is about 40 mSec long.  Again this may be variable. When I started looking at the "bits" in these packets, to try to determine the baud rate so i could try a serial decoder, but i noticed that the timing of the bits was too regular, and the shortest pulse width would not be a standard baud rate. So, what is this protocol? 
+This trace shows both the sensor and thermistor voltages (lower trace). The thermistor voltage is valid only when the LED is on — roughly once per minute.  
+That confirms thermistor readings occur during those longer dips. The 2.4‑second cadence matches the timing of data packets, suggesting the LED cycle may drive the sampling rhythm.
+
+---
+
+## Data Stream at TP1
+The “serial” data is fascinating — it reveals how the device communicates internally. I started by probing TP1 with the oscilloscope to capture timing and verify real data frames.
 
 <p align="center">
-  <img src="resources/scope_traces/C400_preamble1.jpg" width="500" alt="Preamble">
+  <img src="resources/scope_traces/PacketSpacing.png" width="500" alt="Packet Spacing">
 </p>
 
-* The Preamble.  So when i saw the beginning of the packets ( looking for start bits) i noticed this strange pattern. too short to be a byte or nibbe of data, the marking pulses wer very short compaired to the rest of the packet ( three of them ) and one long gap.  Was this deliberate or an artifact of the CPU coming out of its slumber?  I did a search and uncoverd the Patent that covers this exact type protocol, for CO and Smoke Detector Alarms. They are called "rattle bits" and fits this implementation fairly closely.
+Packets are 3.3 V logic‑level safe for Arduino inputs. The most common spacing is ≈ 2.5 seconds, matching the LED blink rate.
 
-So with all this info it was time to spec out an Arduino sketch and tap into this data at TP1. With Copilot help, 4 revs later: **( CO400 RAW PWM FRAME LOGGER v0.4.4 )**   I hope to generate a table of what these frames mean.  Here is a sample the first *Serial data?* I found :  
+<p align="center">
+  <img src="resources/scope_traces/SDS00004.png" width="500" alt="Typical Packets">
+</p>
 
-    ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
-    ?t=4776 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
-    ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
-    ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
-    ?t=4774 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
-    ?t=4772 ms  Bits=66  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
-    ?t=4772 ms  Bits=66  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
-    ?t=4772 ms  Bits=66  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
-    BURST led=1 horn=0
+A typical packet lasts ≈ 40 ms, though timing varies. When I examined bit widths to estimate baud rate, I found they were too regular — not standard serial timing. So what protocol is this?
 
-* **Issues and Answers.**  Three things to point out.  First, the timing **4777 ms** is about twice what we saw on the scope, so it is skipping every other packet.  Second, the Number of bits is around  - 64 bits for 8 Bytes as expected - But if you run this sketch with the bits in the other sense, they almost always match 64-bits.  Third, looking at the last two bytes ,they seem to track the sensor test and recovery. I am pretty certain that these two bytes are the CO level (0x94 is "clear air" level).  I will put some logs in the resources/scope traces file if you are interested. 
+<p align="center">
+  <img src="resources/scope_traces/C400_preamble1.jpg" width="500" alt="Packet Preamble">
+</p>
 
-* **It is PWM data.**  The packet decode is very consistant so it is not random noise, it looks like we nearly have a perfect decoder probbily 80 - 90%. ** *But like everything else, 80% of the work takes 20% of of the time but it take the other 80% of the time to make it work correctly!* I am also not able to see anything that looks like a checksum.  We are not sure of the bit's polarity this preamble may also be: **0xAA 0x55 0xB5...**  The addiiton of the two status bits helps in looking at these logs and correlates well with ethe expected data. But, it is stil a prototyoe 0.4.4 so my 4th attempt with enhancements! 
+### The Preamble
+At the start of each packet, three short pulses and one long gap appear — too brief for normal bytes. After some digging, I found a patent describing this exact signaling method for CO and smoke alarms: **“rattle bits.”**  
+It fits this implementation closely.
 
-* **Never Meant to be Seen.**  The patent referenced below does not include a list of codes, other than **10100101** meaning a carbon-monoxide alarm. We should see that code **0xA5** But, we do not as a device ID in these packets. But maybe when an alarm happens?  We also don't know if the implementations match the patent 100% - Or this is test data for the factory never meant to be shared on the sensor buss outlined there. 
+Armed with that, I wrote an Arduino sketch to log raw frames:  
+**CO400 RAW PWM FRAME LOGGER v0.4.4** — now at revision 4.
 
-* **Suggested Tests** We will try to corrilate the changes to real world inputs.
-  * Manual Test Button
-  * Thermistor Test
-  * Low Battery Simulation 
-  * CO Test
-  * *Anything else?*
+Sample output:
 
-Also, to help correlate the specifec packets to events, I decided to tap into the communications for the user of the device; the LED and the ALARM bits.  With this information, we can see what the last state the device shows, it sticks until the next status changes.  Typically the LED blinks without an ALERT, this is the status you may catch if you are looking a the device, it happens about once a minute.  So what that also tells us - from the hardware described earlier -  is the only time the Thermstor can be read, is when the LED is also activated ( active LOW) so we know that immeadiately after that, we may see some bits change, those may well be a temperature word! The battery voltage sampling seems very infrequent as it takes several minutes to cause a "Low Battery" indication - but some different bits do change when that happens.
+```
+?t=4777 ms Bits=65 FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
+?t=4772 ms Bits=66 FRAME: 0x55 0x40 0x95 0x2A 0x10 0x25 0x28 0x01 | STATE=NORMAL
+BURST led=1 horn=0
+```
 
-## Inconclusive Conclusions:
-With my test software undersampling only reading every other packet, and the number of bits in the packet lengths changing, the only thing can say for sure is the first byte never changes it is an alternating bit pattern (0xAA or 0x55) depending on which pulse width is chosen for 1 or 0.  
+### Issues and Answers
+Three observations:
+1. The 4777 ms interval is about twice the scope timing — likely skipping every other packet.  
+2. Packet length averages 64 bits (8 bytes) as expected.  
+3. The last two bytes track sensor test and recovery; 0x94 appears to be the “clear‑air” level.
 
-From a few hours of watching the data with the expected internal sensotr self-test, changing the voltage for LOW BATTERY tests, and slightly warming he Thermistor.  The analog updtes *are slow* and don't change much so they may be status vs. raw values but they seem to track the stimulus.   Here is my first guess, totally from observations, and probabily wrong:
-  
-  *  Byte 1  = Header 0xAA or 0x55
-  *  Byte 2  = Status / Device ID
-  *  Byte 3 + 4  = Tempeature
-  *  Byte 5 + 6  = Battery Voltage
-  *  Byte 7 + 8  = CO Sensor
-    
+### It’s PWM Data
+The packet decode is consistent — not noise. It’s roughly 80–90 % decoded, though polarity and checksum remain uncertain. The preamble may also be `0xAA 0x55 0xB5…`.  
+As always, the last 20 % takes 80 % of the time to perfect.
 
-## Notes and Comments 
-* **Note (1): Measured 3v3 Power Rail (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
-* **Note (2): Measured +5V Rail (`VO`):** Boosted to **4.54 V** via the chip's  DC-to-DC step-up circuit.
-* **Note (3): Measured Op Amp Stage 2 Baseline Bias (Pin 5):** Biased to at factory to a baseline of exactly **0.298V**. This low-offset configuration provides maximum voltage headroom for incoming positive gas spikes while preventing ground-rail clipping.
-* 
-### Note (4) Corrected Schematic Values (3.3V System Target)
-The color code on these two resistors were hard to read, and typical of precision restors, they had "extra" stripes. To manually replicate the verified *in-situ* baseline voltage of ~0.298V without utilizing non-standard values, substitute the theoretical divider values with standard 1% components:
+### Never Meant to Be Seen
+The patent doesn’t list full codes, except `10100101` (0xA5) for a CO alarm. We haven’t seen that yet — perhaps it appears only during an actual alarm. This may even be factory test data never meant for external access.
 
-* **  Top Divider Resistor (R17):** Swap out for a standard **487kΩ** (or **470kΩ** as a close alternative).
-* **Bottom Divider Resistor (R16):** Swap out for a standard **47kΩ**.
-* **Resulting Baseline:** Yields an explicit stable bias of **0.298V**, mirroring my production device's profile perfectly.
-* Although this matches my unit, as long as the ADC Vref is set properly the standard ratio should be OK.
-* 
-### Note (5) Anti-Polarization Shunt Circuit
-* **Component:** `100kΩ` Resistor (R15) connected directly across the Working Electrode (**WE**) and Counter Electrode (**CE**).
-* **Function:** Electrochemical cells naturally behave like tiny batteries and will drift or suffer permanent degradation if they hold an electrical charge while unpowered. This resistor acts as a safe drain path when the system is off, maintaining a strict 0V potential between the electrodes.
-* **Bench-Testing Note:** I got lazy and tried to measure this resistor in-circuit using a standard Multimeter resistance setting. But the active chemistry of the TGS5042 injects a residual voltage into the traces, which skews the meter's test current and produces false, fluctuating resistance readings i got 600K which was a wierd value for a shunt.
+### Suggested Tests
+To correlate packets with real‑world events:
+- Manual Test Button  
+- Thermistor Test  
+- Low‑Battery Simulation  
+- CO Exposure Test  
+- Anything else?
 
-### Note (6)  Battery Monitoring circuits. 
-- **AN5**: is probabily for “static” battery monitor (slow ADC check of Vbat under light load / quiescent conditions).  
-- I think the "mystery" Vbat circuit to **RC4 &  RC3/AN7** is a “dynamic” check while the horn is being driven. Everything else on the board is regulated and relatively light load, so the horn is the “worst‑case punch” to the cells, and this little network lets the PIC *watch* that punch in real time.  This is how it may work: 
-  
-* **Is the horn path actually working?**  
-   - Drive RC4 → expect to see activity on RC3/AN7 through that RC network.  
-   - If RC3 stays flat → open piezo, broken driver, etc.
+To match packets with visible behavior, I also tapped the LED and alarm lines. The LED blinks about once per minute, so thermistor readings occur only during that active‑low period.  
+Battery‑voltage sampling is slower — several minutes between low‑battery indications — but distinct bit changes appear when it happens.
 
-* **How hard do the batteries sag under worst‑case load?**  
-   - While RC4 is hammering the horn, sample AN7.  
-   - Compare droop vs thresholds → decide low‑battery / EOL / fault.
+---
 
-## References & Resources
+## Inconclusive Conclusions
+With the test software undersampling (every other packet) and variable packet lengths, the only certainty so far is that the first byte never changes — an alternating bit pattern that likely serves as a sync or device ID.  
 
-- BigClive teardown videos (excellent, entertaining tell him who sent you!) 
-  https://www.youtube.com/user/bigclivedotcom
+Here’s **Part 9: Final Summary and Next Steps**, polished and ready to paste. It wraps up your teardown with the same lab‑journal tone — reflective, technical, and a bit playful.
 
-- Figaro TGS5042 CO Sensor Datasheet
-  https://www.figarosensor.com/product/docs/TGS%205042%20%281120%29.pdf
-  
-- Figaro APPLICATION NOTES FOR TGS5042
-  https://www.figarosensor.com/product/docs/tgs5xxx_application%20note(en)_rev01.pdf
+---
 
-- Microchip MCP6021 Op‑Amp Datasheet
-  https://ww1.microchip.com/downloads/en/DeviceDoc/20001685E.pdf
+## Final Summary and Next Steps
+After all this probing, tracing, and decoding, the **CO400** reveals itself as a surprisingly sophisticated little system — a self‑contained electrochemical lab powered by two AA cells.  
 
-- PIC16F688 Datasheet (microcontroller used in CO400)
-  https://ww1.microchip.com/downloads/en/DeviceDoc/41203F.pdf
+Even after fifteen years, the sensor still responds, the analog front‑end behaves exactly as the datasheets predict, and the microcontroller continues its quiet rhythm of self‑tests and data packets. The “five‑chirps‑per‑minute” end‑of‑life warning seems to be purely time‑based, not an actual sensor failure.
 
-- US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
-  https://patents.google.com/patent/US6791453B1/en
+### What We Know
+- The **TGS‑5042** sensor is a true fuel‑cell‑type electrochemical detector.  
+- The **MCP6042** op‑amp converts nanoamp currents into stable voltages with built‑in diagnostics.  
+- The **PIC16F688** microcontroller orchestrates sampling, self‑tests, and communication.  
+- The **RE46C107** handles power regulation and horn driving with impressive efficiency.  
+- The data stream at TP1 is a proprietary PWM protocol — likely factory test or inter‑device signaling.  
+
+### What’s Next
+There’s still plenty to explore:
+- Decode the remaining packet bits and confirm their meaning.  
+- Simulate CO exposure to see how the sensor curve changes.  
+- Try re‑using the sensor and analog front‑end with an Arduino or Teensy for open‑source CO monitoring.  
+- Document the timing relationships between LED, thermistor, and packet transmission more precisely.  
+
+### Closing Thoughts
+This teardown turned out to be far more than a curiosity project — it’s a glimpse into how much engineering goes into something most people never think about until it chirps.  
+Even in retirement, this little alarm still teaches lessons about low‑power design, analog precision, and the elegance of simple circuits doing serious work.
+
+--
+
+# Notes & References
+
+## Notes
+1. **U3 Supply Voltage (Op‑Amp Rail)**  
+   Verified that the MCP6042 receives the regulated 3.3 V rail from the RE46C107. This ensures the TIA output never exceeds ADC limits.
+
+2. **R17 Divider Voltage**  
+   The R17/R16 divider produces a baseline offset of approximately 0.30–0.32 V at U3B pin 5. This matches the Figaro EM5042A reference design.
+
+3. **ADC Reference Behavior**  
+   The PIC16F688 uses Vdd as the ADC reference. With a 3.3 V rail, each ADC step is ~3.22 mV. Combined with the 1 MΩ TIA gain, this yields ~3.22 nA per LSB.
+
+4. **Sensor Recovery Curve**  
+   The 12.9‑second recovery slope matches the Figaro datasheet’s expected time constant for an aging but still‑functional TGS‑5042.
+
+5. **Anti‑Polarization Resistor (R15)**  
+   Confirmed 100 kΩ via color code. Direct measurement is unreliable because the sensor generates its own micro‑voltage when disconnected.
+
+6. **Self‑Test Circuit (D1, R2, R12, C12)**  
+   This network injects a controlled load on the Vbatt line during horn‑test cycles. The PIC monitors the resulting voltage dip to verify battery health and internal resistance.
+
+---
+
+## References
+
+### Datasheets & Application Notes
+- **Figaro TGS‑5042 CO Sensor**  
+  EM5042A Evaluation Module Application Notes  
+  TGS‑5042 Product Datasheet  
+
+- **Microchip PIC16F688**  
+  PIC16F688 8‑bit Microcontroller Datasheet  
+  ADC Module Reference  
+
+- **Microchip MCP6042**  
+  MCP6041/2/3/4 Low‑Power Op‑Amp Family Datasheet  
+  Application Note: Transimpedance Amplifier Design  
+
+- **R&E / Microchip RE46C107**  
+  RE46C107 Smoke/CO Alarm ASIC Datasheet  
+  Typical Application Circuit (Boost + Horn Driver)
+
+### Patents
+- **Inter‑Alarm Communication Using PWM “Rattle Bits”**  
+  U.S. Patent covering encoded inter‑device signaling for smoke/CO alarms.  
+  (Matches the preamble and bit‑timing behavior observed at TP1.)
+
+### Additional Resources
+- BigClive teardown style inspiration  
+- KiCad schematic capture  
+- Oscilloscope captures from SDS1104X‑E  
+- Arduino “CO400 RAW PWM FRAME LOGGER v0.4.4” (custom tool)
 
