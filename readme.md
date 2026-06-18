@@ -297,9 +297,9 @@ The "serial" data is very interesting.  It could give all the insight to the wor
   <img src="resources/scope_traces/C400_preamble1.jpg" width="500" alt="Preamble">
 </p>
 
-* The Preamble.  So when i saw the beginning of the packets ( looking for start bits) i noticed this strange pattern. too short to be a byte or nibbe of data, the marking pulses wer very short compaired to the rest of the packet ( three of them ) and one long gap.  Was this deliberate or an artifact of eth CPU coming out of its slunmber?  I did a search and uncoverd the Patent that covers this protocol, they are called "rattle bits" and fits this implementation fairly closely.
+* The Preamble.  So when i saw the beginning of the packets ( looking for start bits) i noticed this strange pattern. too short to be a byte or nibbe of data, the marking pulses wer very short compaired to the rest of the packet ( three of them ) and one long gap.  Was this deliberate or an artifact of the CPU coming out of its slumber?  I did a search and uncoverd the Patent that covers this exact type protocol, for CO and Smoke Detector Alarms. They are called "rattle bits" and fits this implementation fairly closely.
 
-So with all this info it was time to spec out an Arduino sketch and tap into this data at TP1. ( CO400 RAW PWM FRAME LOGGER v0.4.4 )  I hope to generate a table of what these frames mean.  Here is a sample the first *Serial data?* I found :  
+So with all this info it was time to spec out an Arduino sketch and tap into this data at TP1. With Copilot help, 4 revs later: **( CO400 RAW PWM FRAME LOGGER v0.4.4 )**   I hope to generate a table of what these frames mean.  Here is a sample the first *Serial data?* I found :  
 
     ?t=4777 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
     ?t=4776 ms  Bits=65  FRAME: 0x55 0x40 0x95 0x2A 0x10 0x05 0x94 0x00 | STATE=NORMAL
