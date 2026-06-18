@@ -1,4 +1,4 @@
-
+⁸
 # First Alert CO Alarm (Model CO400) — Teardown  
 *A Work in Progress*
 
@@ -296,7 +296,7 @@ Now that the circuit operation is clear, let’s look at the analog waveforms �
 </p>
 
 ### Under Control
-In this scope trace, the steady line represents the sensor’s “clean‑air” voltage. The recurring pulses every ≈ 2.4 seconds correspond to the self‑test bits described earlier (**3**, **6**).  
+In this scope trace, the steady line represents the sensor’s “clean‑air” voltage. The recurring pulses every ≈ 2.4 seconds are timing and LED pulses, the big jump correspond to the self‑test bits described earlier (**3**, **6**).  
 When the MCU pins go high‑impedance, the TIA output shifts, dropping the buffer output. The wider gaps coincide with LED flashes — roughly every 20 cycles.
 
 ### Old But Still Looking Good
