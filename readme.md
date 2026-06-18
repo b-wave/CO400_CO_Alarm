@@ -257,10 +257,11 @@ Now most of the operation should be evident in the waveforms. Looking at the out
 </p>
 
 ### Under Control 
-Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits described avove **(3)**. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
+Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits described above **(3), (6)**. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
 
-### Old But Looking Good 
-The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear "air level".  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is loss in sensitivity or indications of the electrolyte drying out, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all. So this 2009 vintage CO sensor still can sense. 
+### Old But Still Looking Good 
+The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear "air level".  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is loss in sensitivity or indications of the electrolyte drying out, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all.
+So this 2009 vintage CO sensor still can sense, and the device is still working, the 10-years timer has not been activated. 
 
 <p align="center">
   <img src="resources/scope_traces/SDS00003.jpg" width="500" alt="Sensor Test!">
