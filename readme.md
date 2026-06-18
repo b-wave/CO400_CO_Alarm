@@ -324,7 +324,19 @@ So with all this info it was time to spec out an Arduino sketch and tap into thi
   * CO Test
   * *Anything else?*
 
-Also, to help correlate the specifec packets to events, I decided to tap into the communications for the user of the device, the LED and the ALARM bits.  With this information, we can see what the last state the device shows, it sticks until the next status changes.  Typically the LED blinks without an ALERT, this is the status you may catch if you are looking a the device, it happens about once a minute.  So what that also tells us - from the hardware described earlier -  is the only time the Thermstor can be read, is when the LED is also activated ( active LOW) so we know that immeadiately after that, we may see some bits change, those may well be a temperature word! 
+Also, to help correlate the specifec packets to events, I decided to tap into the communications for the user of the device; the LED and the ALARM bits.  With this information, we can see what the last state the device shows, it sticks until the next status changes.  Typically the LED blinks without an ALERT, this is the status you may catch if you are looking a the device, it happens about once a minute.  So what that also tells us - from the hardware described earlier -  is the only time the Thermstor can be read, is when the LED is also activated ( active LOW) so we know that immeadiately after that, we may see some bits change, those may well be a temperature word! The battery voltage sampling seems very infrequent as it takes several minutes to cause a "Low Battery" indication - but some different bits do change when that happens.
+
+## Inconclusive Conclusions:
+With my test software undersampling only reading every other packet, and the number of bits in the packet lengths changing, the only thing can say for sure is the first byte never changes it is an alternating bit pattern (0xAA or 0x55) depending on which pulse width is chosen for 1 or 0.  
+
+From a few hours of watching the data with the expected internal sensotr self-test, changing the voltage for LOW BATTERY tests, and slightly warming he Thermistor.  The analog updtes *are slow* and don't change much so they may be status vs. raw values but they seem to track the stimulus.   Here is my first guess, totally from observations, and probabily wrong:
+  
+  *  Byte 1  = Header 0xAA or 0x55
+  *  Byte 2  = Status / Device ID
+  *  Byte 3 + 4  = Tempeature
+  *  Byte 5 + 6  = Battery Voltage
+  *  Byte 7 + 8  = CO Sensor
+    
 
 ## Notes and Comments 
 * **Note (1): Measured 3v3 Power Rail (`VREG`):** Powered at **3.39V** (Configured via `REGSEL` Pin 9 tied HIGH to select the 3.3V power profile). This rail provides a quiet analog reference line for temperature sensing.
@@ -339,12 +351,12 @@ The color code on these two resistors were hard to read, and typical of precisio
 * **Resulting Baseline:** Yields an explicit stable bias of **0.298V**, mirroring my production device's profile perfectly.
 * Although this matches my unit, as long as the ADC Vref is set properly the standard ratio should be OK.
 * 
-### Note5 (5) Anti-Polarization Shunt Circuit
+### Note (5) Anti-Polarization Shunt Circuit
 * **Component:** `100kΩ` Resistor (R15) connected directly across the Working Electrode (**WE**) and Counter Electrode (**CE**).
 * **Function:** Electrochemical cells naturally behave like tiny batteries and will drift or suffer permanent degradation if they hold an electrical charge while unpowered. This resistor acts as a safe drain path when the system is off, maintaining a strict 0V potential between the electrodes.
 * **Bench-Testing Note:** I got lazy and tried to measure this resistor in-circuit using a standard Multimeter resistance setting. But the active chemistry of the TGS5042 injects a residual voltage into the traces, which skews the meter's test current and produces false, fluctuating resistance readings i got 600K which was a wierd value for a shunt.
 
-### Note (6)  Battery monitering circuits. 
+### Note (6)  Battery Monitoring circuits. 
 - **AN5**: is probabily for “static” battery monitor (slow ADC check of Vbat under light load / quiescent conditions).  
 - I think the "mystery" Vbat circuit to **RC4 &  RC3/AN7** is a “dynamic” check while the horn is being driven. Everything else on the board is regulated and relatively light load, so the horn is the “worst‑case punch” to the cells, and this little network lets the PIC *watch* that punch in real time.  This is how it may work: 
   
@@ -358,25 +370,21 @@ The color code on these two resistors were hard to read, and typical of precisio
 
 ## References & Resources
 
-- BigClive teardown videos (excellent, entertaining tell him who sent you!)
+- BigClive teardown videos (excellent, entertaining tell him who sent you!) 
   https://www.youtube.com/user/bigclivedotcom
 
 - Figaro TGS5042 CO Sensor Datasheet
   https://www.figarosensor.com/product/docs/TGS%205042%20%281120%29.pdf
   
 - Figaro APPLICATION NOTES FOR TGS5042
-https://www.figarosensor.com/product/docs/tgs5xxx_application%20note(en)_rev01.pdf
+  https://www.figarosensor.com/product/docs/tgs5xxx_application%20note(en)_rev01.pdf
 
-- US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
 - Microchip MCP6021 Op‑Amp Datasheet
   https://ww1.microchip.com/downloads/en/DeviceDoc/20001685E.pdf
 
 - PIC16F688 Datasheet (microcontroller used in CO400)
-
-   https://ww1.microchip.com/downloads/en/DeviceDoc/41203F.pdf
+  https://ww1.microchip.com/downloads/en/DeviceDoc/41203F.pdf
 
 - US Patent 6,791,453 — Interconnected Hazardous Condition Detectors
   https://patents.google.com/patent/US6791453B1/en
 
-- gist/darconeous @ github — Interconnected Hazardous Condition Detectors
-https://gist.github.com/darconeous/b55d9d1c01ac67f356d86f82a56a6271
