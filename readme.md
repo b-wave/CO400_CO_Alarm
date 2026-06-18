@@ -18,9 +18,9 @@ The hardware has several interesting, some unusual, and some familiar parts.  <p
 </p>
 
 ### One moment please.. 
-I did not kow what to expect, i was thinking it would be a simple sensor tied to a piezo beeper, but the device interested me so i decided to do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actually took several hours over a few days to complete. And...I am not sure it is 100% correct so,  take it with about a ~~pinch~~ pound of salt.
+I did not kow what to expect, maybe it would be a simple typical thermal gas  sensor tied to a piezo beeper, but the device interested me so let's do a **bigclivedotcom** - style teardown! It was not as easy as i thought it would be to trace out such a "simple" PCB but it actually took several hours over a few days to complete. And...I am not sure it is 100% correct so,  take it with about a ~~pinch~~ pound of salt.
 
-### The hardware 
+### The Major Hardware 
 - **TGS-5042** CO Sensor
 - **PIC16F88** Microcontroller
 - **MCP6042** Op amp
@@ -35,7 +35,7 @@ I did not kow what to expect, i was thinking it would be a simple sensor tied to
 <p align="center">
   <img src="resources/20260530_115704.jpg" width="225" alt="TGS-5042 Sensor">
 </p>
-When I first saw this device I thought it was a battery. There was even about 0.5V between the terminals. This is the sensor.  It is a miniture lab consisting of fuel-cell-type electrochemical sensor that outputs a tiny current strictly linear to the Carbon Monoxide (CO) gas concentration. It turns out seeing voltage on the sensor pins when the board has no power supply is completely normal and expected for this specific component.
+When I first saw this device I thought it was a battery. There was even a few milivolts between the terminals. This is the sensor.  It is a miniture lab consisting of fuel-cell-type electrochemical sensor that outputs a tiny current strictly linear to the Carbon Monoxide (CO) gas concentration. It turns out seeing voltage on the sensor pins when the board has no power supply is completely normal and expected for this specific component.
 
 ### It Has a Fuel Cell?
 
@@ -44,7 +44,7 @@ Yes, the **TGS5042** is a fuel cell type sensor. That is, it generates electrici
 ### Remember the number: 1642
 Each sensor has a printed calibration number and matching barcode (see photo) This stands for 1.642nA/ppm for my sensor. This means that for every 1 part-per-million (ppm) of CO present, this sensor generates exactly 1.642 nanoamps of current.I will discuss reading this sensor in the OP Amp interface circuit description. 
 
-The other code **090810** is likely the date code for: **10 August 2009** which is close to the manufactured date. 
+The other code **090810** is the lot code for: **10 August 2009** which is close to the manufactured date and the date codes of the chips
 
 ## PIC16F688 (U2) Microcontroller Chip
 
@@ -257,7 +257,7 @@ Now most of the operation should be evident in the waveforms. Looking at the out
 </p>
 
 ### Under Control 
-Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
+Looking at this scope trace, the steady line is the sensor "clean air" voltage. The next most common feature are probably controlled by the first stage test bits described avove **(3)**. They are about 2.4 seconds apart. My guess is when they go high impedance, they push the TIA output, which dropped the buffer output. Looking at the width, the wider gaps seem to coenside with the LED flashes, about every 20 cycles. 
 
 ### Old But Looking Good 
 The big jumps are almost certainly the Sensor self-tests. There's a two pulse step, followed by the big down pulse. The interesting feature is the slope of the output returning to clear "air level".  This means that the sensor is working! It has a 12.9 seconds recovery time.  I don't know if that is loss in sensitivity or indications of the electrolyte drying out, but a bad sensor - according to the Figaro TGS5042 application notes- has no curve at all. So this 2009 vintage CO sensor still can sense. 
