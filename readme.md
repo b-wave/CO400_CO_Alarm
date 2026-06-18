@@ -41,10 +41,6 @@ Tracing this “simple” PCB turned out to be anything but simple; it took seve
 - **Serial Data?** — Maybe… sort of  
 - **Software** — For further investigation  
 
-Perfect workflow, Steve — dropping each cleaned section into a `.txt` file is exactly the right move. That way you can review the edits in GitHub’s raw view before committing.  
-
-Let’s keep momentum: next up is **Part 2: Figaro TGS‑5042 Sensor**. I’ll polish it just like the first section — fixing typos, tightening phrasing, and keeping your notebook tone intact.
-
 ---
 
 ## Figaro TGS‑5042 Sensor
@@ -89,7 +85,6 @@ Key features and functions in this circuit:
 - **Vbatt** is monitored on **AN5** for battery‑voltage measurement  
 - A self‑test circuit involving **D1**, **R2**, **R12**, and **C12** appears to use Vbatt and is controlled by **RC3** and **RC4** (the same signal that enables the siren).  
   ~~TODO: Retrace this circuit to find out what it does.~~ **Done! See Note (6).**
-Here’s **Part 4: MCP6042 Operational Amplifier**, cleaned up and ready to paste. I kept your “bench‑lab” tone — curious, conversational, and technical — while tightening phrasing and fixing typos.
 
 ---
 
@@ -182,7 +177,7 @@ Starting from the solder side occasionally flipped pin numbering, but cross‑ch
 
 ### Board Takeover!
 I considered reprogramming the **PIC16F688** controller. My theory: an end‑of‑life timer halts normal operation, but the CO sensor might still respond.  
-The plan was to unsolder the chip and install a 14‑pin socket — allowing off‑board programming and easy jumper access to an Arduino for sensor testing. Alternatively, short jumper wires to the pads could connect to a breadboard.
+The plan was to unsolder the chip and install a 14‑pin socket — allowing off‑board programming and easy jumper access to an Arduino for sensor testing. Alternatively, short jumper wires to the pads could connect to a breadboard.  If you are interested, there are some proto arduino sketches in the **analog-prototype** folder
 
 ### DFM & DFT
 Tracing was occasionally confusing — many pads had no components, and some leads passed over unused pads. These are likely factory programming or calibration points, part of **Design for Manufacturing (DFM)**.
@@ -291,8 +286,6 @@ The **TGS‑5042** sensor’s current is processed through two stages of the **M
   1. Injects test voltage to verify buffer and ADC path.  
   2. Accelerates sensor warm‑up by pre‑charging filter node (~560 µs pulse).  
 
-Here’s **Part 8: Analog Waveforms and Data Stream Analysis**, cleaned and tightened while keeping your notebook tone — analytical, curious, and hands‑on. You can drop this straight into your `.txt` file.
-
 ---
 
 ## Analog Waveforms
@@ -390,8 +383,6 @@ Battery‑voltage sampling is slower — several minutes between low‑battery i
 
 ## Inconclusive Conclusions
 With the test software undersampling (every other packet) and variable packet lengths, the only certainty so far is that the first byte never changes — an alternating bit pattern that likely serves as a sync or device ID.  
-
-Here’s **Part 9: Final Summary and Next Steps**, polished and ready to paste. It wraps up your teardown with the same lab‑journal tone — reflective, technical, and a bit playful.
 
 ---
 
