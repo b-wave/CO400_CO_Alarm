@@ -1,4 +1,3 @@
-⁸
 # First Alert CO Alarm (Model CO400) — Teardown  
 *A Work in Progress*
 
@@ -268,7 +267,7 @@ The **TGS‑5042** sensor’s current is processed through two stages of the **M
 
 ### 3. Sensor Diagnostic Test 1 (RA5)
 - MCU pin → diode (D2) → 1 MΩ (R5) → U3A pin 3.  
-- Normal mode: MCU holds pin HIGH or High‑Z, reverse‑biasing D2.  
+- Normal mode: MCU holds pin HIGH or High‑Z, reverse biasing D2.  
 - Self‑test: MCU drives LOW, forcing current through R5; op‑amp output rises predictably, verifying loop integrity.
 
 ### 4. Inter‑Stage RC Filter
@@ -296,11 +295,11 @@ Now that the circuit operation is clear, let’s look at the analog waveforms �
 </p>
 
 ### Under Control
-In this scope trace, the steady line represents the sensor’s “clean‑air” voltage. The recurring pulses every ≈ 2.4 seconds are timing and LED pulses, the big jump correspond to the self‑test bits described earlier (**3**, **6**).  
-When the MCU pins go high‑impedance, the TIA output shifts, dropping the buffer output. The wider gaps coincide with LED flashes — roughly every 20 cycles.
+In this scope trace, the steady line represents the sensor’s “clean‑air” voltage. The recurring pulses every ≈ 2.4 seconds are timing and LED pulses, The wider gaps coincide with LED flashes — roughly every 20 cycles.
 
 ### Old But Still Looking Good
-The large jumps are almost certainly sensor self‑tests: a two‑pulse step followed by a deep down‑pulse. The slope of the recovery back to baseline shows the sensor is still active — about 12.9 seconds to recover.  
+The large jumps are almost certainly sensor self‑tests: the big jump correspond to the self‑test bits described earlier (**3**, **6**).  
+When the MCU pins go high‑impedance, the TIA output shifts, dropping the buffer output. a two‑pulse step followed by a deep down‑pulse. The slope of the recovery back to baseline shows the sensor is still active — about 12.9 seconds to recover.  
 That curve indicates the electrolyte is aging but functional; a failed sensor would show no recovery curve at all.
 
 ### It’s Alive!
@@ -328,7 +327,7 @@ The “serial” data is fascinating — it reveals how the device communicates 
   <img src="resources/scope_traces/PacketSpacing.png" width="500" alt="Packet Spacing">
 </p>
 
-Packets are 3.3 V logic‑level safe for Arduino inputs. The most common spacing is ≈ 2.5 seconds, matching the LED blink rate.
+Packets are 3.3 V logic‑level safe for Arduino inputs. The most common spacing is ≈ 2.5 seconds, but every 20 or so there are shorter gaps between them matching the LED blink rate.
 
 <p align="center">
   <img src="resources/scope_traces/SDS00004.png" width="500" alt="Typical Packets">
@@ -341,7 +340,7 @@ A typical packet lasts ≈ 40 ms, though timing varies. When I examined bi
 </p>
 
 ### The Preamble
-At the start of each packet, three short pulses and one long gap appear — too brief for normal bytes. After some digging, I found a patent describing this exact signaling method for CO and smoke alarms: **“rattle bits.”**  
+At the start of each packet, three short pulses and one long gap appear — too brief for normal bits. After some digging, I found a patent describing this exact signaling method for CO and smoke alarms: **“rattle bits.”**  
 It fits this implementation closely.
 
 Armed with that, I wrote an Arduino sketch to log raw frames:  
