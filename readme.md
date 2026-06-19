@@ -215,36 +215,31 @@ $$\frac{1}{\ 1,000,000,000}$$ of an amp!
 
 ---
 
-### 1. Sensor Current to Output Voltage $$(\(V_{out}\))$$
+### 1. Sensor Current to Output Voltage ($V_{out}$)
 The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor converts this current into a measurable voltage.
 
-### 2. Calculating Sensor Current $$(\(I_s\))$$
+### 2. Calculating Sensor Current ($I_s$)
 To derive the raw sensor current (A) from the measured output voltage:
-$$\[
-I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}
-\]$$
+$$\[I_s = \frac{V_{out} - 1.0}{1.0\times 10^6}\]$$
 
-### 3. Carbon Monoxide Concentration
-To determine CO concentration in ppm:
-$$\[
-\text{CO (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}
-\]$$
+### 3. Carbon Monoxide (CO) Concentration Calculation
+To determine the absolute CO gas concentration in parts per million (ppm), divide the sensor output current by the sensor's individual sensitivity coefficient (measured in nA/ppm and found printed on the sensor's barcode).
+$$\text{CO Concentration (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}$$ 
 
 ### 4. Figaro Reference Formula
-The official Figaro EM5042A evaluation circuit applies a fixed amplification factor of $$\(1.0 × 10^6\)$$, producing a 1.0 V baseline offset in clean air:
-$$\[
-V_{out} = (\text{Concentration} × \text{Sensitivity}) + 1.0
-\]$$
+The official Figaro EM5042A evaluation circuit applies a fixed amplification factor of: 1,000,000 producing a 1.0 V baseline offset in clean air:
+
+$$\[V_{out} (\text{Concentration} × \text{Sensitivity}) + 1.0\]$$
 
 ### 5. Microprocessor Measurement Resolution
 To estimate the minimum measurable CO step for a given ADC:
-$$\[
-\text{Resolution} = \frac{C_{max}}{2^M × B_{min}}
+$$\[\text{Resolution} = \frac{C_{max}}{2^M × B_{min}}
 \]$$
-where  
-  • $$\(C_{max}\)$$ = maximum CO concentration  
-  • $$\(M\)$$ = ADC bit depth  
-  • $$\(B_{min}\)$$ = minimum distinct digital bits  
+
+where:  
+  • Cmax= maximum CO concentration  
+  • M= ADC bit depth  
+  • Bmin = minimum distinct digital bits  
 
 ---
 
