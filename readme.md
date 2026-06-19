@@ -210,8 +210,7 @@ Most of the circuits were introduced earlier, but this section dives deeper into
 
 Because this is a safety system, it includes **Built‑In System Tests (BIST)** to meet regulatory requirements. I’ll outline the math behind the sensor readings and how the microcontroller interprets them.
 
-The sensor’s output current is tiny — on the order of nanoamps — so the circuit must convert it to voltage for the ADC. It’s basically Ohm’s Law, but at a scale of  
-$$\frac{1}{\ 1,000,000,000}$$ of an amp!
+The sensor’s output current is tiny — on the order of nanoamps — so the circuit must convert it to voltage for the ADC. It’s basically Ohm’s Law, but at a scale of  $$\frac{1}{\ 1,000,000,000}$$ of an amp!
 
 ---
 
@@ -220,10 +219,12 @@ The sensor generates a minute current proportional to gas concentration. An oper
 
 ### 2. Calculating Sensor Current ($I_s$)
 To derive the raw sensor current (A) from the measured output voltage:
+
 $$\[I_s = \frac{V_{out} - 1.0}{1.0\times 10^6}\]$$
 
 ### 3. Carbon Monoxide (CO) Concentration Calculation
 To determine the absolute CO gas concentration in parts per million (ppm), divide the sensor output current by the sensor's individual sensitivity coefficient (measured in nA/ppm and found printed on the sensor's barcode).
+
 $$\text{CO Concentration (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}$$ 
 
 ### 4. Figaro Reference Formula
@@ -233,12 +234,13 @@ $$\[V_{out} (\text{Concentration} × \text{Sensitivity}) + 1.0\]$$
 
 ### 5. Microprocessor Measurement Resolution
 To estimate the minimum measurable CO step for a given ADC:
-$$\[\text{Resolution} = \frac{C_{max}}{2^M × B_{min}}
-\]$$
 
-where:  
-  • Cmax= maximum CO concentration  
-  • M= ADC bit depth  
+$$\\text{Resolution} = \frac{C_{max}}{2^M × B_{min}}
+\$$
+
+*where:*  
+  • Cmax = maximum CO concentration  
+  • M = ADC bit depth  
   • Bmin = minimum distinct digital bits  
 
 ---
@@ -294,8 +296,7 @@ In this scope trace, the steady line represents the sensor’s “clean‑air”
 
 ### Old But Still Looking Good
 The large jumps are almost certainly sensor self‑tests: the big jump correspond to the self‑test bits described earlier (**3**, **6**).  
-When the MCU pins go high‑impedance, the TIA output shifts, dropping the buffer output. a two‑pulse step followed by a deep down‑pulse. The slope of the recovery back to baseline shows the sensor is still active — about 12.9 seconds to recover.  
-That curve indicates the electrolyte is aging but functional; a failed sensor would show no recovery curve at all.
+When the MCU pins go high‑impedance, the TIA output shifts, dropping the buffer output. a two‑pulse step followed by a deep down‑pulse. The slope of the recovery back to baseline shows the sensor is still active — about 12.9 seconds to recover.  That curve indicates the electrolyte is aging but functional; a failed sensor would show no recovery curve at all.
 
 ### It’s Alive!
 So this 2009‑vintage sensor still detects CO. The device’s 10‑year timer “kill switch” hasn’t been triggered.
