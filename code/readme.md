@@ -1,7 +1,25 @@
 # RawSniffer (TP1 PWM Decoder)
 
-This is the active sniffer tool used to capture and decode the TP1 data stream
-from the CO400. It represents the current direction of the project.
+Some log fies are incuded. You can look at these logs and see bits changing, possibly in response to the inputs. These are some the active sniffer tool captured and decoded te states from the TP1 data stream. It represents the current direction of the project. 
+
+| STATE | LED Pulses | ALARM Pulses |
+| :---- | :----: |:-------: |
+| NULL | 0  |  0 |  
+|  NORMAL | 1 | 0 |
+|  LOW_BATT | 1 | 1 |
+| MALFUNCTION | 3 | 3 |
+|  ALARM| 8 | 4  |
+|  EOL | 5 | 5 |
+
+The data is spotty due to the known flaws in the existing code and the long sample periods and need better code to really make sure. Here are my current guesses looking at the data in these files responding to stimulaton. For the CO, the last two bytes seem to follow the two  automatic self-test spikes and recovery.  We know the thermistor gets polled only every ~48 Sec. I did some heating of the thermistor and saw the 5th and 6th bytes change.   We can't tell the battery polling happens but when the voltage was lowered to 2.0V (to trigger the LOW_BATT alarm) bytes 3 and 4 seemed to change. Oh, and the  ALARM is triggered by holding the test button down for several seconds, first we see a chirp ( which looks like LOW_BATT) then the alarm happens- we can look foe any status bits do they change?  This table is probabily wrong, the one field we know never changes is the first byte (0x55 or 0xAA depending on which sense we make the bits):
+
+| Byte 1 |  Byte 2  | Byte 3 | Byte 4 | Byte 5 |  Byte 6  | Byte 7 | Byte 8 |
+| :---- | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
+| 0x055 | STATUS? | BATTERY? |  BATTERY? |  TEMP? |  TEMP? |  CO? |  CO? | 
+| 0x0AA | STATUS? | BATTERY? |  BATTERY? |  TEMP? |  TEMP? |  CO? |  CO? | 
+
+
+
 
 For older analog-based experiments, see `analog-prototypes/`.
 
