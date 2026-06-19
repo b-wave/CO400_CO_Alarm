@@ -211,40 +211,40 @@ Most of the circuits were introduced earlier, but this section dives deeper into
 Because this is a safety system, it includes **Built‑In System Tests (BIST)** to meet regulatory requirements. I’ll outline the math behind the sensor readings and how the microcontroller interprets them.
 
 The sensor’s output current is tiny — on the order of nanoamps — so the circuit must convert it to voltage for the ADC. It’s basically Ohm’s Law, but at a scale of  
-\(\frac{1}{1,000,000,000}\) of an amp!
+$$\frac{1}{\ 1,000,000,000}$$ of an amp!
 
 ---
 
-### 1. Sensor Current to Output Voltage (\(V_{out}\))
+### 1. Sensor Current to Output Voltage $$(\(V_{out}\))$$
 The sensor generates a minute current proportional to gas concentration. An operational amplifier or load resistor converts this current into a measurable voltage.
 
-### 2. Calculating Sensor Current (\(I_s\))
+### 2. Calculating Sensor Current $$(\(I_s\))$$
 To derive the raw sensor current (A) from the measured output voltage:
-\[
+$$\[
 I_s = \frac{V_{out} - 1.0}{1.0 \times 10^6}
-\]
+\]$$
 
 ### 3. Carbon Monoxide Concentration
 To determine CO concentration in ppm:
-\[
+$$\[
 \text{CO (ppm)} = \frac{\text{Sensor Output Current (nA)}}{\text{Sensor Sensitivity (nA/ppm)}}
-\]
+\]$$
 
 ### 4. Figaro Reference Formula
-The official Figaro EM5042A evaluation circuit applies a fixed amplification factor of \(1.0 × 10^6\), producing a 1.0 V baseline offset in clean air:
-\[
+The official Figaro EM5042A evaluation circuit applies a fixed amplification factor of $$\(1.0 × 10^6\)$$, producing a 1.0 V baseline offset in clean air:
+$$\[
 V_{out} = (\text{Concentration} × \text{Sensitivity}) + 1.0
-\]
+\]$$
 
 ### 5. Microprocessor Measurement Resolution
 To estimate the minimum measurable CO step for a given ADC:
-\[
+$$\[
 \text{Resolution} = \frac{C_{max}}{2^M × B_{min}}
-\]
+\]$$
 where  
-  • \(C_{max}\) = maximum CO concentration  
-  • \(M\) = ADC bit depth  
-  • \(B_{min}\) = minimum distinct digital bits  
+  • $$\(C_{max}\)$$ = maximum CO concentration  
+  • $$\(M\)$$ = ADC bit depth  
+  • $$\(B_{min}\)$$ = minimum distinct digital bits  
 
 ---
 
